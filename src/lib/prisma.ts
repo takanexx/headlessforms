@@ -1,21 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-let prismaClient: PrismaClient;
-try {
-  prismaClient = global.prisma || new PrismaClient();
-} catch (error) {
-  console.error(
-    'PrismaClient initialization failed. Please run `npx prisma generate` and try again.',
-  );
-  throw error;
-}
+export const prisma = globalForPrisma.prisma || new PrismaClient();
 
-export const prisma = prismaClient;
-
-if (process.env.NODE_ENV !== 'production') {
-  global.prisma = prisma;
-}
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
