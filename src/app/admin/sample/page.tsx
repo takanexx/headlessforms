@@ -1,3 +1,4 @@
+import { ThemeToggleButton } from '@/components/theme-toggle-button';
 import { Card } from '@/components/ui/card';
 import {
   NavigationMenu,
@@ -45,7 +46,21 @@ export default function SampleAdminPage() {
       <main className="flex-1 flex flex-col">
         {/* ヘッダー */}
         <header className="w-full border-b bg-background px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Sample ドキュメント</h1>
+          <div className="flex items-center gap-3">
+            <img src="/next.svg" alt="Next.js" className="h-8 w-8" />
+            <h1 className="text-2xl font-bold">Sample ドキュメント</h1>
+          </div>
+          <nav className="flex items-center gap-2">
+            <a
+              href="https://nextjs.org/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Next.js Docs
+            </a>
+            <ThemeToggleButton />
+          </nav>
         </header>
         <div className="flex-1 p-6">
           <Card className="p-6">
