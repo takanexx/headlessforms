@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 
 export function ThemeToggleButton() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // マウント後のみ描画（SSR対策）
