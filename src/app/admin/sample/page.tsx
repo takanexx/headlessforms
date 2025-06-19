@@ -57,7 +57,7 @@ export default function SampleAdminPage() {
               rel="noopener noreferrer"
               className="text-sm font-medium text-primary hover:underline"
             >
-              Next.js Docs
+              Docs
             </a>
             <ThemeToggleButton />
           </nav>
