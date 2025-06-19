@@ -7,7 +7,6 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
 import { Separator } from '@/components/ui/separator';
-import Link from 'next/link';
 
 export default function SampleAdminPage() {
   return (
@@ -18,30 +17,32 @@ export default function SampleAdminPage() {
         <NavigationMenu>
           <NavigationMenuList className="flex-col gap-2">
             <NavigationMenuItem>
-              <Link href="/admin/sample" passHref legacyBehavior>
-                <NavigationMenuLink className="p-2 rounded hover:bg-accent transition-colors">
-                  はじめに
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink
+                href="/admin/sample"
+                className="p-2 rounded hover:bg-accent transition-colors"
+              >
+                はじめに
+              </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/admin/sample/usage" passHref legacyBehavior>
-                <NavigationMenuLink className="p-2 rounded hover:bg-accent transition-colors">
-                  使い方
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink
+                href="/admin/sample/usage"
+                className="p-2 rounded hover:bg-accent transition-colors"
+              >
+                使い方
+              </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/admin/sample/api" passHref legacyBehavior>
-                <NavigationMenuLink className="p-2 rounded hover:bg-accent transition-colors">
-                  APIリファレンス
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink
+                href="/admin/sample/api"
+                className="p-2 rounded hover:bg-accent transition-colors"
+              >
+                APIリファレンス
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </aside>
-
       {/* メインコンテンツ */}
       <main className="flex-1 flex flex-col">
         {/* ヘッダー */}
