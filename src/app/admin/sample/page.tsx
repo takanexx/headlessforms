@@ -1,4 +1,4 @@
-import Header from '@/components/admin/Header';
+import Header from '@/components/admin/navigation-header';
 import Sidebar from '@/components/admin/sidebar';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';

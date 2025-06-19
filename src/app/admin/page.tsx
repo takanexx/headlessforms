@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import Header from '@/components/admin/Header';
+import Header from '@/components/admin/navigation-header';
 import Sidebar from '@/components/admin/sidebar';
 import SignIn from '@/components/sign-in';
 import { SignOut } from '@/components/sign-out';

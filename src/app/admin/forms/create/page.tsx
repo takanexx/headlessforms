@@ -1,6 +1,6 @@
 'use client';
 
-import Header from '@/components/admin/Header';
+import Header from '@/components/admin/navigation-header';
 import Sidebar from '@/components/admin/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
