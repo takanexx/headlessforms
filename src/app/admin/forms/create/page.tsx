@@ -3,30 +3,16 @@
 import { ThemeToggleButton } from '@/components/theme-toggle-button';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
-import { Pagination } from '@/components/ui/pagination';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import Link from 'next/link';
 
-const dummyForms = [
-  { id: 1, name: 'フォーム A', description: 'フォーム A の説明' },
-  { id: 2, name: 'フォーム B', description: 'フォーム B の説明' },
-  { id: 3, name: 'フォーム C', description: 'フォーム C の説明' },
-];
-
-export default function FormsPage() {
+export default function CreateFormPage() {
   return (
     <div className="flex min-h-screen bg-background dark:bg-background">
       {/* ヘッダー */}
@@ -73,41 +59,43 @@ export default function FormsPage() {
       {/* メインコンテンツ */}
       <main className="flex-1 flex flex-col">
         <div className="h-16"></div>
-        {/* コンテンツ */}
         <div className="flex-1 p-6">
-          <div className="my-4 flex items-center justify-between">
-            <h1 className="text-2xl font-bold">フォーム一覧</h1>
-            <Link href="/admin/forms/create">
-              <Button>新規作成</Button>
-            </Link>
-          </div>
-          <Card className="p-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>名前</TableHead>
-                  <TableHead>説明</TableHead>
-                  <TableHead>操作</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {dummyForms.map(form => (
-                  <TableRow key={form.id}>
-                    <TableCell>{form.id}</TableCell>
-                    <TableCell>{form.name}</TableCell>
-                    <TableCell>{form.description}</TableCell>
-                    <TableCell>
-                      <Button variant="outline">詳細を見る</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <h1 className="text-2xl font-bold mb-4">フォーム作成</h1>
+          <Card className="p-6">
+            <form className="space-y-4">
+              <div>
+                <Label
+                  htmlFor="formName"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  フォーム名
+                </Label>
+                <Input
+                  id="formName"
+                  type="text"
+                  placeholder="例: お問い合わせフォーム"
+                  className="mt-1 block w-full"
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="formDescription"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  説明
+                </Label>
+                <Input
+                  id="formDescription"
+                  type="text"
+                  placeholder="フォームの説明"
+                  className="mt-1 block w-full"
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit">作成</Button>
+              </div>
+            </form>
           </Card>
-          <div className="mt-4">
-            <Pagination />
-          </div>
         </div>
       </main>
     </div>
