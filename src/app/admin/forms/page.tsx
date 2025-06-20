@@ -14,14 +14,34 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-const dummyForms = [
-  { id: 1, name: 'フォーム A', description: 'フォーム A の説明' },
-  { id: 2, name: 'フォーム B', description: 'フォーム B の説明' },
-  { id: 3, name: 'フォーム C', description: 'フォーム C の説明' },
-];
+interface Form {
+  id: number;
+  title: string;
+  createdAt: string;
+}
 
 export default function FormsPage() {
+  const [forms, setForms] = useState<Form[]>([]);
+
+  useEffect(() => {
+    async function fetchForms() {
+      try {
+        const res = await fetch('/api/forms');
+        if (res.ok) {
+          const data = await res.json();
+          setForms(data);
+        } else {
+          console.error('フォームの取得に失敗しました。');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchForms();
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-background dark:bg-background">
       {/* ヘッダー */}
@@ -45,16 +65,18 @@ export default function FormsPage() {
                 <TableRow>
                   <TableHead>ID</TableHead>
                   <TableHead>名前</TableHead>
-                  <TableHead>説明</TableHead>
+                  <TableHead>作成日時</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dummyForms.map(form => (
+                {forms.map(form => (
                   <TableRow key={form.id}>
                     <TableCell>{form.id}</TableCell>
-                    <TableCell>{form.name}</TableCell>
-                    <TableCell>{form.description}</TableCell>
+                    <TableCell>{form.title}</TableCell>
+                    <TableCell>
+                      {new Date(form.createdAt).toLocaleString()}
+                    </TableCell>
                     <TableCell>
                       <Button variant="outline">詳細を見る</Button>
                     </TableCell>

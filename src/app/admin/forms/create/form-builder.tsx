@@ -58,6 +58,9 @@ export default function FormBuilder({ session }: { session: Session | null }) {
       if (!response.ok) {
         throw new Error('フォーム作成に失敗しました。');
       }
+
+      // フォーム一覧画面へリダイレクト
+      redirect('/admin/forms');
     } catch (error) {
       console.error(error);
       setAlertMessage('フォームの作成に失敗しました。');
