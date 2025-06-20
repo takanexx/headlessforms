@@ -65,8 +65,8 @@ model Form {
   id        String     @id @default(uuid())
   title     String
   schema    Json
-  ownerId   String
-  owner     User       @relation(fields: [ownerId], references: [id])
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
   responses Response[]
   createdAt DateTime   @default(now())
 }
