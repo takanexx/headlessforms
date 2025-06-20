@@ -1,5 +1,14 @@
 'use client';
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,16 +21,24 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Session } from 'next-auth';
+import { redirect } from 'next/navigation';
 import { useState } from 'react';
 
 export default function FormBuilder({ session }: { session: Session | null }) {
   const [title, setTitle] = useState('');
-  const [schema, setSchema] = useState([]);
+  const [schema, setSchema] = useState<{ type: string; label: string }[]>([]);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+
+  const handleAddItem = () => {
+    setSchema(prev => [...prev, { type: '', label: '' }]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session || !session.user || !session.user.id) {
-      alert('ログインしていません。');
+      setAlertMessage('ログインしていません。ログインしてください。');
+      setAlertOpen(true);
       return;
     }
 
@@ -41,7 +58,8 @@ export default function FormBuilder({ session }: { session: Session | null }) {
       }
     } catch (error) {
       console.error(error);
-      alert('フォームの作成に失敗しました。');
+      setAlertMessage('フォームの作成に失敗しました。');
+      setAlertOpen(true);
     }
   };
 
@@ -73,36 +91,62 @@ export default function FormBuilder({ session }: { session: Session | null }) {
               項目
             </Label>
             <Button
-              size={'sm'}
-              variant={'outline'}
+              size="sm"
+              variant="outline"
               type="button"
-              onClick={() => console.log('add')}
+              onClick={handleAddItem}
             >
               追加
             </Button>
           </div>
           <div className="mt-2 space-y-4">
-            <div className="flex items-center gap-4">
-              <Select>
-                <SelectTrigger className="w-1/4">
-                  <SelectValue placeholder="項目の種類を選択" />
-                </SelectTrigger>
-                <SelectContent className="w-1/4">
-                  <SelectItem value="text">テキスト</SelectItem>
-                  <SelectItem value="email">メールアドレス</SelectItem>
-                  <SelectItem value="number">数値</SelectItem>
-                  <SelectItem value="date">日付</SelectItem>
-                  <SelectItem value="select">選択肢</SelectItem>
-                  <SelectItem value="checkbox">チェックボックス</SelectItem>
-                  <SelectItem value="radio">ラジオボタン</SelectItem>
-                  <SelectItem value="textarea">テキストエリア</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input type="text" className="mt-1 block w-full" />
-              <Button variant="destructive" size="sm" type="button">
-                削除
-              </Button>
-            </div>
+            {schema.map((item, index) => (
+              <div key={index} className="flex items-center gap-4">
+                <Select
+                  value={item.type}
+                  onValueChange={value => {
+                    const newSchema = [...schema];
+                    newSchema[index].type = value;
+                    setSchema(newSchema);
+                  }}
+                >
+                  <SelectTrigger className="w-1/4">
+                    <SelectValue placeholder="項目の種類を選択" />
+                  </SelectTrigger>
+                  <SelectContent className="w-1/4">
+                    <SelectItem value="text">テキスト</SelectItem>
+                    <SelectItem value="email">メールアドレス</SelectItem>
+                    <SelectItem value="number">数値</SelectItem>
+                    <SelectItem value="date">日付</SelectItem>
+                    <SelectItem value="select">選択肢</SelectItem>
+                    <SelectItem value="checkbox">チェックボックス</SelectItem>
+                    <SelectItem value="radio">ラジオボタン</SelectItem>
+                    <SelectItem value="textarea">テキストエリア</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  type="text"
+                  placeholder="項目名を入力"
+                  className="mt-1 block w-full"
+                  value={item.label}
+                  onChange={e => {
+                    const newSchema = [...schema];
+                    newSchema[index].label = e.target.value;
+                    setSchema(newSchema);
+                  }}
+                />
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  type="button"
+                  onClick={() =>
+                    setSchema(schema.filter((_, i) => i !== index))
+                  }
+                >
+                  削除
+                </Button>
+              </div>
+            ))}
           </div>
         </div>
         {session && session.user && (
@@ -112,6 +156,24 @@ export default function FormBuilder({ session }: { session: Session | null }) {
           <Button type="submit">作成</Button>
         </div>
       </form>
+      <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>エラー</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription>{alertMessage}</AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                // Admin画面にリダイレクト
+                redirect('/admin');
+              }}
+            >
+              OK
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
