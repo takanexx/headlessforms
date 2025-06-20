@@ -26,6 +26,7 @@ import { useState } from 'react';
 
 export default function FormBuilder({ session }: { session: Session | null }) {
   const [title, setTitle] = useState('');
+  const [error, setError] = useState('');
   const [schema, setSchema] = useState<{ type: string; label: string }[]>([]);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -37,6 +38,7 @@ export default function FormBuilder({ session }: { session: Session | null }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session || !session.user || !session.user.id) {
+      setError('not_logged_in');
       setAlertMessage('ログインしていません。ログインしてください。');
       setAlertOpen(true);
       return;
@@ -49,7 +51,7 @@ export default function FormBuilder({ session }: { session: Session | null }) {
         body: JSON.stringify({
           title,
           schema: JSON.stringify(schema),
-          ownerId: session.user.id,
+          userId: session.user.id,
         }),
       });
 
@@ -165,8 +167,10 @@ export default function FormBuilder({ session }: { session: Session | null }) {
           <AlertDialogFooter>
             <AlertDialogCancel
               onClick={() => {
-                // Admin画面にリダイレクト
-                redirect('/admin');
+                if (error === 'not_logged_in') {
+                  // ログイン画面にリダイレクト
+                  redirect('/admin');
+                }
               }}
             >
               OK

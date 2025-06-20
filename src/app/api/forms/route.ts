@@ -3,14 +3,14 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { title, schema, ownerId } = await request.json();
+    const { title, schema, userId } = await request.json();
 
     // Create a new form record in the database
     const form = await prisma.form.create({
       data: {
         title,
         schema,
-        ownerId,
+        userId,
       },
     });
 
