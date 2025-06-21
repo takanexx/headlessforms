@@ -1,7 +1,5 @@
 import FormBuilder from '@/app/admin/forms/edit/form-editor';
 import { auth } from '@/auth';
-import Header from '@/components/admin/navigation-header';
-import Sidebar from '@/components/admin/sidebar';
 
 export default async function EditFormPage({
   params,
@@ -19,19 +17,13 @@ export default async function EditFormPage({
   const form = await response.json();
 
   return (
-    <div className="flex min-h-screen bg-background dark:bg-background">
-      {/* ヘッダー */}
-      <Header />
-      {/* サイドバー */}
-      <Sidebar />
-      {/* メインコンテンツ */}
-      <main className="flex-1 flex flex-col">
-        <div className="h-16"></div>
+    <div className="flex bg-background dark:bg-background">
+      <div className="flex-1 flex flex-col">
         <div className="flex-1 p-6">
           <h1 className="text-2xl font-bold mb-4">フォーム編集</h1>
           <FormBuilder session={session} form={form} />
         </div>
-      </main>
+      </div>
     </div>
   );
 }

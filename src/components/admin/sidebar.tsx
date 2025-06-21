@@ -1,50 +1,90 @@
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from '../ui/navigation-menu';
+'use client';
 
-export default function Sidebar() {
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '@/components/ui/sidebar';
+import { FileText, Home, Megaphone } from 'lucide-react';
+import Link from 'next/link';
+import { ThemeToggleButton } from '../theme-toggle-button';
+
+export default function AdminSidebar() {
+  const menus = [
+    {
+      title: 'Home',
+      url: '/admin',
+      icon: Home,
+    },
+    {
+      title: 'Form',
+      url: '/admin/forms',
+      icon: FileText,
+    },
+    {
+      title: 'Answer',
+      url: '/admin/answers',
+      icon: Megaphone,
+    },
+  ];
   return (
-    <aside className="hidden md:flex flex-col w-64 border-r p-4 mt-18">
-      <h2 className="text-lg font-bold mb-4 mt-2">Admin Menu</h2>
-      <NavigationMenu>
-        <NavigationMenuList className="flex-col gap-2">
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/admin"
-              className="p-2 rounded hover:bg-accent transition-colors"
-            >
-              ホーム
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/admin/forms"
-              className="p-2 rounded hover:bg-accent transition-colors"
-            >
-              フォーム一覧
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/admin/sample"
-              className="p-2 rounded hover:bg-accent transition-colors"
-            >
-              Sample
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/admin/other"
-              className="p-2 rounded hover:bg-accent transition-colors"
-            >
-              その他
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    </aside>
+    <Sidebar>
+      <SidebarHeader className="px-4">
+        <div>
+          <img src="/next.svg" alt="Next.js" className="h-10 w-30" />
+        </div>
+      </SidebarHeader>
+      <SidebarContent className="p-4">
+        <SidebarMenu>
+          {menus.map((menu, index) => (
+            <SidebarMenuItem key={index}>
+              <SidebarMenuButton asChild>
+                <Link href={menu.url} className="sidebar-item">
+                  <menu.icon />
+                  <span>{menu.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+
+        {/* <SidebarGroup>
+          <SidebarGroupLabel>Forms</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/forms" className="sidebar-item">
+                    <ListOrdered />
+                    <span>Lists</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/forms/create" className="sidebar-item">
+                    Create
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup> */}
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem className="justify-between flex items-center p-2">
+            <span>User Name</span>
+            <SidebarMenuButton asChild>
+              <ThemeToggleButton />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

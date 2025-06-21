@@ -1,22 +1,27 @@
-import { ThemeToggleButton } from '../theme-toggle-button';
+import { ThemeToggleButton } from '@/components/theme-toggle-button';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from '@/components/ui/navigation-menu';
 
-export default function Header() {
+import Link from 'next/link';
+export default function AdminHeader() {
   return (
-    <header className="fixed top-0 left-0 w-full border-b bg-background dark:bg-background px-6 py-4 flex items-center justify-between z-10">
-      <div className="flex items-center gap-3">
-        <img src="/next.svg" alt="Next.js" className="h-8 w-8" />
-      </div>
-      <nav className="flex items-center gap-2">
-        <a
-          href="https://nextjs.org/docs"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-medium text-primary hover:underline"
-        >
-          Docs
-        </a>
-        <ThemeToggleButton />
-      </nav>
-    </header>
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link href={'/admin'}>home</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <ThemeToggleButton />
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 }

@@ -26,7 +26,11 @@ export function ThemeToggleButton() {
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className="ml-2"
     >
-      {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      {isDark ? (
+        <Sun className="h-5 w-5 text-orange-300" />
+      ) : (
+        <Moon className="h-5 w-5 text-purple-400" />
+      )}
     </Button>
   );
 }

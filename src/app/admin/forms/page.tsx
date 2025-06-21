@@ -1,7 +1,5 @@
 'use client';
 
-import Header from '@/components/admin/navigation-header';
-import Sidebar from '@/components/admin/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -77,14 +75,9 @@ export default function FormsPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background dark:bg-background">
-      {/* ヘッダー */}
-      <Header />
-      {/* サイドバー */}
-      <Sidebar />
+    <div className="flex bg-background dark:bg-background">
       {/* メインコンテンツ */}
-      <main className="flex-1 flex flex-col">
-        <div className="h-16"></div>
+      <div className="flex-1 flex flex-col">
         {/* コンテンツ */}
         <div className="flex-1 p-6">
           <div className="my-4 flex items-center justify-between">
@@ -155,7 +148,7 @@ export default function FormsPage() {
             <Pagination />
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

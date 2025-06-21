@@ -1,6 +1,4 @@
 import { auth } from '@/auth';
-import Header from '@/components/admin/navigation-header';
-import Sidebar from '@/components/admin/sidebar';
 import SignIn from '@/components/sign-in';
 import { SignOut } from '@/components/sign-out';
 import { Card } from '@/components/ui/card';
@@ -11,13 +9,8 @@ export default async function AdminPage() {
   const user = session?.user || { name: 'ユーザー' };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* ヘッダー */}
-      <Header />
-      {/* サイドバー */}
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <div className="h-16"></div>
+    <div className="flex bg-background">
+      <div className="flex-1 flex-col">
         <div className="flex-1 p-6">
           <Card className="p-6 flex flex-col items-center">
             <h1>管理者ページ</h1>
