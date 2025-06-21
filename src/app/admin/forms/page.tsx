@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Pagination } from '@/components/ui/pagination';
+import { Toaster } from '@/components/ui/sonner';
 import {
   Table,
   TableBody,
@@ -23,6 +24,7 @@ import { Ellipsis, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface Form {
   id: string;
@@ -49,6 +51,30 @@ export default function FormsPage() {
     }
     fetchForms();
   }, []);
+
+  const handleDelete = async (formId: string) => {
+    try {
+      const res = await fetch('/api/form/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ formId }),
+      });
+      if (res.ok) {
+        toast.success('フォームを削除しました。');
+        setForms(forms.filter(form => form.id !== formId));
+      } else {
+        toast.error('フォームの削除に失敗しました。');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('エラーが発生しました。');
+      }
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-background dark:bg-background">
@@ -104,7 +130,11 @@ export default function FormsPage() {
                             >
                               編集
                             </DropdownMenuItem>
-                            <DropdownMenuItem>削除</DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(form.id)}
+                            >
+                              削除
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -119,6 +149,7 @@ export default function FormsPage() {
                 )}
               </TableBody>
             </Table>
+            <Toaster />
           </Card>
           <div className="mt-4">
             <Pagination />
