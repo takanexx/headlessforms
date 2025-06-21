@@ -16,8 +16,7 @@ export default async function EditFormPage({
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formId }),
   });
-
-  console.log(response.json());
+  const form = await response.json();
 
   return (
     <div className="flex min-h-screen bg-background dark:bg-background">
@@ -30,7 +29,7 @@ export default async function EditFormPage({
         <div className="h-16"></div>
         <div className="flex-1 p-6">
           <h1 className="text-2xl font-bold mb-4">フォーム編集</h1>
-          <FormBuilder session={session} />
+          <FormBuilder session={session} form={form} />
         </div>
       </main>
     </div>

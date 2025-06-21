@@ -30,11 +30,13 @@ export default function FormBuilder({
   form,
 }: {
   session: Session | null;
-  form?: { title: string; schema: { type: string; label: string }[] };
+  form?: { id: string; title: string; schema: string; userId: string };
 }) {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(form?.title);
   const [error, setError] = useState('');
-  const [schema, setSchema] = useState<{ type: string; label: string }[]>([]);
+  const [schema, setSchema] = useState<{ type: string; label: string }[]>(
+    JSON.parse(form?.schema ?? ''),
+  );
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
@@ -57,10 +59,11 @@ export default function FormBuilder({
     }
 
     try {
-      const response = await fetch('/api/form/create', {
+      const response = await fetch('/api/form/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: form?.id,
           title,
           schema: JSON.stringify(schema),
           userId: session.user.id,
@@ -68,14 +71,14 @@ export default function FormBuilder({
       });
 
       if (!response.ok) {
-        throw new Error('フォーム作成に失敗しました。');
+        throw new Error('フォーム編集に失敗しました。');
       }
 
       // フォーム一覧画面へリダイレクト
       redirect('/admin/forms');
     } catch (error) {
       console.error(error);
-      setAlertMessage('フォームの作成に失敗しました。');
+      setAlertMessage('フォームの編集に失敗しました。');
       setAlertOpen(true);
     }
   };
@@ -166,11 +169,9 @@ export default function FormBuilder({
             ))}
           </div>
         </div>
-        {session && session.user && (
-          <Input id="ownerId" type="hidden" value={session.user.id} readOnly />
-        )}
+        <Input id="ownerId" type="hidden" value={form?.userId} readOnly />
         <div className="flex justify-end pt-4">
-          <Button type="submit">作成</Button>
+          <Button type="submit">保存</Button>
         </div>
       </form>
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
