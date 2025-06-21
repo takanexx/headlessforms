@@ -4,6 +4,12 @@ import Header from '@/components/admin/navigation-header';
 import Sidebar from '@/components/admin/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Pagination } from '@/components/ui/pagination';
 import {
   Table,
@@ -13,11 +19,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Ellipsis, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface Form {
-  id: number;
+  id: string;
   title: string;
   createdAt: string;
 }
@@ -28,7 +36,7 @@ export default function FormsPage() {
   useEffect(() => {
     async function fetchForms() {
       try {
-        const res = await fetch('/api/forms');
+        const res = await fetch('/api/form/list');
         if (res.ok) {
           const data = await res.json();
           setForms(data);
@@ -56,7 +64,10 @@ export default function FormsPage() {
           <div className="my-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold">フォーム一覧</h1>
             <Link href="/admin/forms/create">
-              <Button>新規作成</Button>
+              <Button>
+                <Plus />
+                新規作成
+              </Button>
             </Link>
           </div>
           <Card className="p-4">
@@ -66,22 +77,46 @@ export default function FormsPage() {
                   <TableHead>ID</TableHead>
                   <TableHead>名前</TableHead>
                   <TableHead>作成日時</TableHead>
-                  <TableHead>操作</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {forms.map(form => (
-                  <TableRow key={form.id}>
-                    <TableCell>{form.id}</TableCell>
-                    <TableCell>{form.title}</TableCell>
-                    <TableCell>
-                      {new Date(form.createdAt).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline">詳細を見る</Button>
+                {forms.length > 0 ? (
+                  forms.map(form => (
+                    <TableRow key={form.id}>
+                      <TableCell>{form.id}</TableCell>
+                      <TableCell>{form.title}</TableCell>
+                      <TableCell>
+                        {new Date(form.createdAt).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline">
+                              <Ellipsis />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-20">
+                            <DropdownMenuItem
+                              onClick={() =>
+                                redirect(`/admin/forms/edit/${form.id}`)
+                              }
+                            >
+                              編集
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>削除</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell className="text-center py-5" colSpan={4}>
+                      フォームデータはありません
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </Card>

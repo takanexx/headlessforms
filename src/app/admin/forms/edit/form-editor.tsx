@@ -25,12 +25,23 @@ import { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { useState } from 'react';
 
-export default function FormBuilder({ session }: { session: Session | null }) {
+export default function FormBuilder({
+  session,
+  form,
+}: {
+  session: Session | null;
+  form?: { title: string; schema: { type: string; label: string }[] };
+}) {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
   const [schema, setSchema] = useState<{ type: string; label: string }[]>([]);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+
+  if (!form) {
+    // フォームが存在しない場合は、フォーム作成ページにリダイレクト
+    // redirect('/admin/forms/create');
+  }
 
   const handleAddItem = () => {
     setSchema(prev => [...prev, { type: '', label: '' }]);
