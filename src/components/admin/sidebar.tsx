@@ -1,5 +1,6 @@
 'use client';
 
+import { ThemeToggleButton } from '@/components/theme-toggle-button';
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +12,6 @@ import {
 } from '@/components/ui/sidebar';
 import { FileText, Home, Megaphone } from 'lucide-react';
 import Link from 'next/link';
-import { ThemeToggleButton } from '../theme-toggle-button';
 
 export default function AdminSidebar() {
   const menus = [
