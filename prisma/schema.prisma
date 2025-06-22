@@ -67,11 +67,11 @@ model Form {
   schema    Json
   userId    String
   user      User       @relation(fields: [userId], references: [id])
-  responses Response[]
+  answers Answer[]
   createdAt DateTime   @default(now())
 }
 
-model Response {
+model Answer {
   id        String   @id @default(uuid())
   form      Form     @relation(fields: [formId], references: [id])
   formId    String
