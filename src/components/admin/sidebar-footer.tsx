@@ -12,10 +12,11 @@ import {
 } from '@/components/ui/sidebar';
 import { ChevronUp, DollarSign, LogOut, User2 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { ThemeToggleButton } from '../theme-toggle-button';
 
 export default function AdminSidebarFooter() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const user = session?.user ?? { name: 'Username' };
 
   return (
@@ -33,9 +34,14 @@ export default function AdminSidebarFooter() {
               <ThemeToggleButton />
             </div>
             <DropdownMenuContent side="top" className="">
-              <DropdownMenuItem>
-                <User2 />
-                <span>Account</span>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={'/admin/account'}
+                  className="flex items-center gap-2"
+                >
+                  <User2 />
+                  <span>Account</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <DollarSign />
