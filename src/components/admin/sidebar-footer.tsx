@@ -47,7 +47,11 @@ export default function AdminSidebarFooter() {
                 <DollarSign />
                 <span>Billing</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => signOut()}>
+              <DropdownMenuItem
+                onClick={() =>
+                  signOut({ callbackUrl: '/admin', redirect: true })
+                }
+              >
                 <LogOut />
                 <span>Sign out</span>
               </DropdownMenuItem>
