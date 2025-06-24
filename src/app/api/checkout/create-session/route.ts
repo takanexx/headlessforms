@@ -14,9 +14,9 @@ export async function POST() {
           quantity: 1,
         },
       ],
+      payment_method_types: ['card'],
       return_url: 'http://localhost:3000/admin/account',
     });
-    console.log(session.client_secret);
 
     return NextResponse.json(
       { clientSecret: session.client_secret },

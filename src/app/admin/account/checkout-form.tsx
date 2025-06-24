@@ -1,15 +1,57 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { CheckoutProvider, PaymentElement } from '@stripe/react-stripe-js';
+import { Toaster } from '@/components/ui/sonner';
+import {
+  CheckoutProvider,
+  PaymentElement,
+  useCheckout,
+} from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+const stripePromise = loadStripe(
+  'pk_test_51RdKWLGa94dJvYnTXzQ8d6yz3ud84Jg4x0xEOpWcDI4HQvNldygTM6XRpLqreI1Sjc6ygXOjwtb5NEYmUa5ty7lB001IXMWwvR',
+);
+
+const PaymentForm = () => {
+  const { confirm, updateEmail } = useCheckout();
+  const [loading, setLoading] = useState(true);
+  const [p, setP] = useState('');
+
+  useEffect(() => {
+    // NOTE: this is required for embedded mode
+    updateEmail('test@example.com');
+  }, []);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const result = await confirm();
+    setP(JSON.stringify(result, null, 2));
+    if (result.type === 'error') {
+      toast.error('stripe error');
+    }
+
+    toast.success('決済が完了しました。');
+  };
+
+  return (
+    <>
+      {loading && <p>Loading...</p>}
+      <p>{p}</p>
+      <form onSubmit={handleSubmit}>
+        <PaymentElement onReady={() => setLoading(false)} />
+        <div className="flex justify-end mt-10">
+          <Button type="submit">決済する</Button>
+        </div>
+      </form>
+      <Toaster />
+    </>
+  );
+};
 
 const CheckoutForm = () => {
-  const [loading, setLoading] = useState(true);
-  const stripePromise = loadStripe(
-    'pk_test_51RdKWLGa94dJvYnTXzQ8d6yz3ud84Jg4x0xEOpWcDI4HQvNldygTM6XRpLqreI1Sjc6ygXOjwtb5NEYmUa5ty7lB001IXMWwvR',
-  );
-
   const fetchClientSecret = async () => {
     return fetch('/api/checkout/create-session', {
       method: 'POST',
@@ -19,15 +61,9 @@ const CheckoutForm = () => {
   };
 
   return (
-    <>
-      {loading && <p>Loading...</p>}
-      <CheckoutProvider stripe={stripePromise} options={{ fetchClientSecret }}>
-        <form>
-          <PaymentElement onReady={() => setLoading(false)} />
-          <Button type="submit">Submit</Button>
-        </form>
-      </CheckoutProvider>
-    </>
+    <CheckoutProvider stripe={stripePromise} options={{ fetchClientSecret }}>
+      <PaymentForm />
+    </CheckoutProvider>
   );
 };
 
