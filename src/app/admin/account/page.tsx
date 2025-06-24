@@ -26,7 +26,7 @@ export default async function AccountPage() {
             </TabsList>
             <TabsContent value="account">
               <Card className="p-10">
-                <h4 className="font-bold">アカウント</h4>
+                <h3 className="font-bold">アカウント</h3>
                 <div className="flex flex-row gap-10">
                   <div className="px-4">
                     <img
@@ -51,7 +51,7 @@ export default async function AccountPage() {
               <div className="mt-10">
                 <div className=" flex items-center gap-4">
                   <TriangleAlert className="text-red-500" />
-                  <h1 className="text-2xl font-bold">Danger Zone</h1>
+                  <h2 className="text-2xl font-bold">Danger Zone</h2>
                 </div>
                 <Card className="p-10 flex-col mt-5">
                   <div className="items-center gap-2">
@@ -70,7 +70,24 @@ export default async function AccountPage() {
             </TabsContent>
             <TabsContent value="billing">
               <Card className="p-6 flex-col">
-                <h1>Billing</h1>
+                <h3 className="text-2xl font-bold">Billing</h3>
+                <div>
+                  <p>
+                    カード情報を提供すると、
+                    <span className="font-semibold px-1">headlessforms</span>
+                    がその規約に従って今後の支払いをお客様のカードに請求することを許可することになります。
+                  </p>
+                  <p>
+                    カード情報は
+                    <Button
+                      className="font-semibold underline px-1"
+                      variant={'link'}
+                    >
+                      Stripe
+                    </Button>
+                    にのみ送信・保存されます
+                  </p>
+                </div>
                 <CheckoutForm />
               </Card>
             </TabsContent>

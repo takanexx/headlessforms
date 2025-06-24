@@ -7,6 +7,7 @@ import {
   useCheckout,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -52,6 +53,7 @@ const PaymentForm = () => {
 };
 
 const CheckoutForm = () => {
+  const { resolvedTheme } = useTheme();
   const fetchClientSecret = async () => {
     return fetch('/api/checkout/create-session', {
       method: 'POST',
@@ -60,8 +62,15 @@ const CheckoutForm = () => {
       .then(data => data.clientSecret);
   };
 
+  const appearance = {
+    theme: (resolvedTheme === 'dark' ? 'night' : 'stripe') as 'night' | 'stripe' | 'flat',
+  };
+
   return (
-    <CheckoutProvider stripe={stripePromise} options={{ fetchClientSecret }}>
+    <CheckoutProvider
+      stripe={stripePromise}
+      options={{ fetchClientSecret, elementsOptions: { appearance } }}
+    >
       <PaymentForm />
     </CheckoutProvider>
   );
