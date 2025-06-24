@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowRight, TriangleAlert, User2 } from 'lucide-react';
+import CheckoutForm from './checkout-form';
 
 export default async function AccountPage() {
   const session = await auth();
@@ -71,7 +71,7 @@ export default async function AccountPage() {
             <TabsContent value="billing">
               <Card className="p-6 flex-col">
                 <h1>Billing</h1>
-                <Separator className="mb-4" />
+                <CheckoutForm />
               </Card>
             </TabsContent>
           </Tabs>
