@@ -3,9 +3,14 @@ import SignIn from '@/components/sign-in';
 import { SignOut } from '@/components/sign-out';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { redirect } from 'next/navigation';
 
 export default async function AdminPage() {
   const session = await auth();
+  if (!session) {
+    redirect('/login');
+  }
+
   const user = session?.user || { name: 'ユーザー' };
 
   return (
