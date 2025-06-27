@@ -6,6 +6,10 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  // If you are not using an external connection pooler, 
+  // start by setting the pool size (connection_limit) to 1
+  // https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/databases-connections
+  connection_limit = 1
 }
 
 model User {
