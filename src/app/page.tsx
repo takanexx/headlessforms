@@ -15,12 +15,13 @@ export default function Home() {
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
           HeadlessForms
         </h1>
-        <p className="text-lg sm:text-xl text-center max-w-xl">
-          UI/UXは完全に自由。アンケート設計・収集・分析APIプラットフォーム
-        </p>
+        <div className="text-lg sm:text-xl text-center max-w-xl my-10">
+          <p className="">UI/UXは完全に自由。</p>
+          <p className="">アンケート設計・収集・分析APIプラットフォーム</p>
+        </div>
         <div className="flex gap-4 mt-4">
           <Button asChild>
-            <Link href="/admin">ログイン</Link>
+            <Link href="/pricing">今すぐ始める</Link>
           </Button>
           <Button variant="outline" asChild>
             <a
