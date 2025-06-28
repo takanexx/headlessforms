@@ -8,5 +8,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/login',
   },
   adapter: PrismaAdapter(prisma),
-  providers: [Google],
+  providers: [
+    Google({
+      // 初期化時にGoogleからユーザー情報を取得
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          lan: profile.plan ?? 'free',
+        };
+      },
+    }),
+  ],
+  callbacks: {
+    session({ session, user }) {
+      session.user.plan = user.plan;
+      return session;
+    },
+  },
 });

@@ -21,7 +21,7 @@ export default function Home() {
         </div>
         <div className="flex gap-4 mt-4">
           <Button asChild>
-            <Link href="/pricing">今すぐ始める</Link>
+            <Link href="/login">今すぐ始める</Link>
           </Button>
           <Button variant="outline" asChild>
             <a

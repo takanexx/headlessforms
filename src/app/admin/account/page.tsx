@@ -5,11 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowRight, TriangleAlert, User2 } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import CheckoutForm from './checkout-form';
 
 export default async function AccountPage() {
   const session = await auth();
-  const user = session?.user || { name: 'ユーザー' };
+  if (!session) {
+    redirect('/login');
+  }
+  const user = session?.user || { name: 'ユーザー', plan: 'Free' };
 
   return (
     <div className="flex bg-background dark:bg-background">
@@ -42,6 +46,9 @@ export default async function AccountPage() {
                       value={user.name || ''}
                       className="mt-2 w-full"
                     />
+                    <Label htmlFor="name">プラン</Label>
+                    <p className="pt-2">{user.plan}</p>
+
                     <div className="flex justify-end mt-10">
                       <Button type="button">保存</Button>
                     </div>
