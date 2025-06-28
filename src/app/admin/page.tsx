@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function AdminPage() {
@@ -18,9 +19,7 @@ export default async function AdminPage() {
       <div className="flex items-center justify-between px-8 pt-8 pb-2">
         <div>
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-xl">bar_chart</span>
-            <h2 className="text-xl font-bold">Usage</h2>
-            <span className="ml-2 text-muted-foreground text-sm">?</span>
+            <h1 className="text-2xl font-bold">Home</h1>
           </div>
           <div className="text-muted-foreground text-xs mt-1">
             Showing usage from{' '}
@@ -28,74 +27,85 @@ export default async function AdminPage() {
             <span className="font-semibold">July 1, 2025</span>
           </div>
         </div>
-        <div>
-          <Select>
-            <option>Current billing period</option>
-          </Select>
-        </div>
       </div>
 
       <div className="flex flex-col gap-6 px-8 py-4">
-        <div className="flex flex-row gap-4 w-full">
-          {/* EAS Updateカード */}
+        <div className="flex-row gap-10 w-full grid grid-cols-2">
+          {/* Formsカード */}
           <Card className="p-4 flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined">update</span>
-                <span className="font-semibold">EAS Update</span>
+              <div className="flex-col items-center gap-2">
+                <span className="font-semibold">Forms</span>
+                <div className="text-muted-foreground text-xs mt-1">
+                  {'Your Account is '}
+                  <span className="font-bold">{user.plan}</span>
+                  {' plan'}
+                </div>
               </div>
-              <Button variant="outline" size="sm">
-                Export
+              <Button variant="default" size="sm">
+                <Link href="/pricing">Upgrade</Link>
               </Button>
             </div>
+            <Separator orientation="horizontal" />
             <div className="flex gap-8 mt-2">
               <div>
-                <div className="text-2xl font-bold">0</div>
-                <div className="text-xs text-muted-foreground">
-                  Monthly active users
-                </div>
+                <div className="text-2xl font-bold">1</div>
+                <div className="text-xs text-muted-foreground">フォーム数</div>
               </div>
+              <Separator orientation="vertical" />
               <div>
-                <div className="text-2xl font-bold">0 GiB</div>
-                <div className="text-xs text-muted-foreground">
-                  Global edge bandwidth
-                </div>
+                <div className="text-2xl font-bold">2</div>
+                <div className="text-xs text-muted-foreground">残数</div>
+              </div>
+              <Separator orientation="vertical" />
+              <div>
+                <div className="text-2xl font-bold">3</div>
+                <div className="text-xs text-muted-foreground">Limit forms</div>
               </div>
             </div>
           </Card>
 
-          {/* EAS Buildカード */}
+          {/* Answersカード */}
           <Card className="p-4 flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined">build</span>
-                <span className="font-semibold">EAS Build</span>
+              <div className="flex-col items-center gap-2">
+                <span className="font-semibold">Answers</span>
+                <div className="text-muted-foreground text-xs mt-1">
+                  Showing usage from{' '}
+                  <span className="font-semibold">June 1, 2025</span> through{' '}
+                  <span className="font-semibold">July 1, 2025</span>
+                </div>
               </div>
               <Button variant="outline" size="sm">
                 Export
               </Button>
             </div>
+            <Separator orientation="horizontal" />
             <div className="flex gap-8 mt-2">
               <div>
-                <div className="text-2xl font-bold">4</div>
-                <div className="text-xs text-muted-foreground">Builds</div>
+                <div className="text-2xl font-bold">20</div>
+                <div className="text-xs text-muted-foreground">Answers</div>
               </div>
+              <Separator orientation="vertical" />
               <div>
-                <div className="text-2xl font-bold">0</div>
+                <div className="text-2xl font-bold">80</div>
                 <div className="text-xs text-muted-foreground">
-                  Android builds
+                  Left Answers
                 </div>
               </div>
+              <Separator orientation="vertical" />
               <div>
-                <div className="text-2xl font-bold">4</div>
-                <div className="text-xs text-muted-foreground">iOS builds</div>
+                <div className="text-2xl font-bold">100</div>
+                <div className="text-xs text-muted-foreground">
+                  Per month limit
+                </div>
               </div>
             </div>
           </Card>
         </div>
         {/* Buildsセクション */}
         <Card className="p-4 flex flex-col gap-4">
-          <div className="font-semibold mb-2">Builds</div>
+          <h3 className="font-semibold mb-2">Answers Chart</h3>
           <div className="flex items-center gap-4">
             <div>
               <label className="text-xs text-muted-foreground mr-1">
