@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/select';
 import { Plus, Trash } from 'lucide-react';
 import { Session } from 'next-auth';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
@@ -45,6 +45,7 @@ type FormBuilderValues = {
 };
 
 export default function FormBuilder({ session }: { session: Session | null }) {
+  const router = useRouter();
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [error, setError] = useState('');
@@ -106,7 +107,7 @@ export default function FormBuilder({ session }: { session: Session | null }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: data.title,
-          schema: JSON.stringify(data.schema),
+          schema: data.schema,
           userId: session.user.id,
         }),
       });
@@ -117,7 +118,11 @@ export default function FormBuilder({ session }: { session: Session | null }) {
       }
 
       // フォーム一覧画面へリダイレクト
-      redirect('/admin/forms');
+      if (typeof window !== 'undefined') {
+        // リダイレクト先でtoasterを表示するためにsessionStorageにフラグをセット
+        sessionStorage.setItem('formCreated', '1');
+      }
+      router.push('/admin/forms');
     } catch (error) {
       console.error(error);
       setAlertMessage('フォームの作成に失敗しました。');
@@ -260,7 +265,7 @@ export default function FormBuilder({ session }: { session: Session | null }) {
             <AlertDialogCancel
               onClick={() => {
                 if (error === 'not_logged_in') {
-                  redirect('/admin');
+                  router.push('/admin');
                 }
                 setAlertMessage('');
                 setAlertOpen(false);

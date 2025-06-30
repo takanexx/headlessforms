@@ -34,6 +34,15 @@ export default function FormsPage() {
   const [forms, setForms] = useState<Form[]>([]);
 
   useEffect(() => {
+    // フォーム作成成功時のトースト表示
+    if (
+      typeof window !== 'undefined' &&
+      sessionStorage.getItem('formCreated')
+    ) {
+      toast.success('フォーム作成に成功しました。');
+      sessionStorage.removeItem('formCreated');
+    }
+
     async function fetchForms() {
       try {
         const res = await fetch('/api/form/list');
