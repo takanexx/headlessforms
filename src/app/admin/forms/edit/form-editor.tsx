@@ -34,8 +34,18 @@ export default function FormBuilder({
 }) {
   const [title, setTitle] = useState(form?.title);
   const [error, setError] = useState('');
+  const parseSchema = (schemaStr?: string) => {
+    if (!schemaStr) return [];
+    try {
+      const parsed = JSON.parse(schemaStr);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  };
+
   const [schema, setSchema] = useState<{ type: string; label: string }[]>(
-    JSON.parse(form?.schema ?? ''),
+    parseSchema(form?.schema),
   );
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
