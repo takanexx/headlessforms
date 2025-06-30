@@ -22,6 +22,7 @@ model User {
   accounts      Account[]
   forms         Form[]
   sessions      Session[]
+  answers       Answer[]        @relation("UserAnswers")
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,6 +81,8 @@ model Answer {
   id        String   @id @default(uuid())
   form      Form     @relation(fields: [formId], references: [id])
   formId    String
+  user      User     @relation(fields: [userId], references: [id], name: "UserAnswers")
+  userId    String
   answers   Json
   meta      Json?
   createdAt DateTime @default(now())

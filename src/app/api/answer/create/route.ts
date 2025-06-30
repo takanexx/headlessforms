@@ -1,9 +1,68 @@
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
+    const session = await auth();
+    const userId = session?.user?.id;
+    const plan = (session?.user?.plan || 'Free').toLowerCase();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'ユーザー情報が取得できません。ログインし直してください。' },
+        { status: 401 },
+      );
+    }
+
     const { schema: answers, formId } = await request.json();
+
+    // 今月の開始・終了日時を計算
+    const now = new Date();
+    const startOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1,
+      0,
+      0,
+      0,
+      0,
+    );
+    const endOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    // 今月の回答数を取得
+    const count = await prisma.answer.count({
+      where: {
+        userId,
+        createdAt: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+      },
+    });
+
+    // プランごとの上限
+    const planLimit: Record<string, number> = {
+      free: 100,
+      pro: 1000,
+      business: Infinity,
+    };
+    const limit = planLimit[plan] ?? 100;
+
+    if (limit !== Infinity && count >= limit) {
+      return NextResponse.json(
+        { error: `このプランでは今月の回答上限（${limit}件）に達しています。` },
+        { status: 403 },
+      );
+    }
 
     // フォームのschema情報を取得
     const form = await prisma.form.findUnique({ where: { id: formId } });
@@ -69,6 +128,7 @@ export async function POST(request: Request) {
     const answer = await prisma.answer.create({
       data: {
         formId,
+        userId,
         answers,
       },
     });
