@@ -1,37 +1,20 @@
 'use client';
 
+import { Form, getColumns } from '@/app/admin/forms/columns';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Pagination } from '@/components/ui/pagination';
 import { Toaster } from '@/components/ui/sonner';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Ellipsis, Plus } from 'lucide-react';
+import { RowSelectionState } from '@tanstack/react-table';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-interface Form {
-  id: string;
-  title: string;
-  createdAt: string;
-}
+import { DataTable } from './data-table';
 
 export default function FormsPage() {
   const [forms, setForms] = useState<Form[]>([]);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   useEffect(() => {
     // フォーム作成成功時のトースト表示
@@ -59,18 +42,24 @@ export default function FormsPage() {
     fetchForms();
   }, []);
 
-  const handleDelete = async (formId: string) => {
+  // 一括削除
+  const handleBulkDelete = async () => {
+    const selectedIds = Object.keys(rowSelection).filter(
+      key => rowSelection[key],
+    );
+    if (selectedIds.length === 0) return;
     try {
       const res = await fetch('/api/form/delete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ formId }),
+        body: JSON.stringify({ formId: selectedIds }), // 複数ID対応APIならformId: selectedIds、単一ならループで送信
       });
       if (res.ok) {
-        toast.success('フォームを削除しました。');
-        setForms(forms.filter(form => form.id !== formId));
+        toast.success('選択したフォームを削除しました。');
+        setForms(forms.filter(form => !selectedIds.includes(form.id)));
+        setRowSelection({});
       } else {
         toast.error('フォームの削除に失敗しました。');
       }
@@ -83,74 +72,39 @@ export default function FormsPage() {
     }
   };
 
+  const columns = getColumns();
+
+  const selectedCount = Object.values(rowSelection).filter(Boolean).length;
+
   return (
     <div className="flex bg-background dark:bg-background">
-      {/* メインコンテンツ */}
       <div className="flex-1 flex flex-col">
-        {/* コンテンツ */}
         <div className="flex-1 p-6">
           <div className="my-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold">フォーム一覧</h1>
-            <Link href="/admin/forms/create">
-              <Button>
-                <Plus />
-                新規作成
+            <div className="flex gap-2">
+              <Button
+                variant="destructive"
+                onClick={handleBulkDelete}
+                disabled={selectedCount === 0}
+              >
+                削除{selectedCount > 0 ? `（${selectedCount}件）` : ''}
               </Button>
-            </Link>
+              <Link href="/admin/forms/create">
+                <Button>
+                  <Plus />
+                  新規作成
+                </Button>
+              </Link>
+            </div>
           </div>
           <Card className="p-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>名前</TableHead>
-                  <TableHead>作成日時</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {forms.length > 0 ? (
-                  forms.map(form => (
-                    <TableRow key={form.id}>
-                      <TableCell>{form.id}</TableCell>
-                      <TableCell>{form.title}</TableCell>
-                      <TableCell>
-                        {new Date(form.createdAt).toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
-                              <Ellipsis />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-20">
-                            <DropdownMenuItem
-                              onClick={() =>
-                                redirect(`/admin/forms/edit/${form.id}`)
-                              }
-                            >
-                              編集
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(form.id)}
-                            >
-                              削除
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell className="text-center py-5" colSpan={4}>
-                      フォームデータはありません
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <DataTable
+              columns={columns}
+              data={forms}
+              rowSelection={rowSelection}
+              onRowSelectionChange={setRowSelection}
+            />
             <Toaster />
           </Card>
           <div className="mt-4">
