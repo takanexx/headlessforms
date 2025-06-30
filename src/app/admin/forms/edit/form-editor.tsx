@@ -34,14 +34,19 @@ export default function FormBuilder({
 }) {
   const [title, setTitle] = useState(form?.title);
   const [error, setError] = useState('');
-  const parseSchema = (schemaStr?: string) => {
-    if (!schemaStr) return [];
-    try {
-      const parsed = JSON.parse(schemaStr);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
+  // schemaがstring型でも配列型でも対応できるように修正
+  const parseSchema = (schemaInput?: unknown) => {
+    if (!schemaInput) return [];
+    if (typeof schemaInput === 'string') {
+      try {
+        const parsed = JSON.parse(schemaInput);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
     }
+    if (Array.isArray(schemaInput)) return schemaInput;
+    return [];
   };
 
   const [schema, setSchema] = useState<{ type: string; label: string }[]>(
