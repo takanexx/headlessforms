@@ -44,6 +44,12 @@ export default function FormBuilder({ session }: { session: Session | null }) {
       setAlertOpen(true);
       return;
     }
+    if (title.trim() === '') {
+      setError('title_empty');
+      setAlertMessage('タイトルを入力してください。');
+      setAlertOpen(true);
+      return;
+    }
 
     try {
       const response = await fetch('/api/form/create', {
