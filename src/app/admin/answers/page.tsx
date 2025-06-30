@@ -1,34 +1,12 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Pagination } from '@/components/ui/pagination';
 import { Toaster } from '@/components/ui/sonner';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Eye, Trash2 } from 'lucide-react';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-interface Answer {
-  id: string;
-  respondent: string;
-  createdAt: string;
-}
+import { Answer, getColumns } from './columns';
+import { DataTable } from './data-table';
 
 export default function AnswersPage() {
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -74,74 +52,17 @@ export default function AnswersPage() {
     }
   };
 
+  const columns = getColumns(handleDelete);
+
   return (
     <div className="flex bg-background dark:bg-background">
-      {/* メインコンテンツ */}
       <div className="flex-1 flex flex-col">
-        {/* コンテンツ */}
         <div className="flex-1 p-6">
           <div className="my-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold">回答一覧</h1>
-            <Link href="/admin/answers/create">
-              <Button>
-                <Eye />
-                詳細を見る
-              </Button>
-            </Link>
           </div>
           <Card className="p-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>回答者</TableHead>
-                  <TableHead>回答日時</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {answers.length > 0 ? (
-                  answers.map(answer => (
-                    <TableRow key={answer.id}>
-                      <TableCell>{answer.id}</TableCell>
-                      <TableCell>{answer.respondent}</TableCell>
-                      <TableCell>
-                        {new Date(answer.createdAt).toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
-                              <Trash2 />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-20">
-                            <DropdownMenuItem
-                              onClick={() =>
-                                redirect(`/admin/answers/${answer.id}`)
-                              }
-                            >
-                              詳細
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(answer.id)}
-                            >
-                              削除
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell className="text-center py-5" colSpan={4}>
-                      回答データはありません
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <DataTable columns={columns} data={answers} />
             <Toaster />
           </Card>
           <div className="mt-4">
