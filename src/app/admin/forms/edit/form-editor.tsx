@@ -49,9 +49,9 @@ export default function FormBuilder({
     return [];
   };
 
-  const [schema, setSchema] = useState<{ type: string; label: string }[]>(
-    parseSchema(form?.schema),
-  );
+  const [schema, setSchema] = useState<
+    { type: string; label: string; name: string }[]
+  >(parseSchema(form?.schema));
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
@@ -61,7 +61,7 @@ export default function FormBuilder({
   }
 
   const handleAddItem = () => {
-    setSchema(prev => [...prev, { type: '', label: '' }]);
+    setSchema(prev => [...prev, { type: '', label: '', name: '' }]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +80,7 @@ export default function FormBuilder({
         body: JSON.stringify({
           id: form?.id,
           title,
-          schema: JSON.stringify(schema),
+          schema: schema,
           userId: session.user.id,
         }),
       });
@@ -167,6 +167,17 @@ export default function FormBuilder({
                   onChange={e => {
                     const newSchema = [...schema];
                     newSchema[index].label = e.target.value;
+                    setSchema(newSchema);
+                  }}
+                />
+                <Input
+                  type="text"
+                  placeholder="name属性を入力"
+                  className="mt-1 block w-full"
+                  value={item.name}
+                  onChange={e => {
+                    const newSchema = [...schema];
+                    newSchema[index].name = e.target.value;
                     setSchema(newSchema);
                   }}
                 />

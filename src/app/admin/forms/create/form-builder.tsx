@@ -36,6 +36,7 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 type FormSchemaItem = {
   type: string;
+  name: string;
   label: string;
 };
 
@@ -92,6 +93,13 @@ export default function FormBuilder({ session }: { session: Session | null }) {
         });
         return;
       }
+      if (!data.schema[i].name) {
+        setFormError(`schema.${i}.name` as keyof FormBuilderValues, {
+          type: 'required',
+          message: 'name値を入力してください。',
+        });
+        return;
+      }
       if (!data.schema[i].label) {
         setFormError(`schema.${i}.label` as keyof FormBuilderValues, {
           type: 'required',
@@ -112,7 +120,6 @@ export default function FormBuilder({ session }: { session: Session | null }) {
         }),
       });
 
-      console.log(response);
       if (!response.ok) {
         const errorData = await response.json();
         setAlertMessage(errorData?.error || 'フォーム作成に失敗しました。');
@@ -176,7 +183,7 @@ export default function FormBuilder({ session }: { session: Session | null }) {
                   size="sm"
                   variant="outline"
                   type="button"
-                  onClick={() => append({ type: '', label: '' })}
+                  onClick={() => append({ type: '', name: '', label: '' })}
                 >
                   <Plus />
                 </Button>
@@ -235,6 +242,24 @@ export default function FormBuilder({ session }: { session: Session | null }) {
                               type="text"
                               placeholder="項目名を入力"
                               {...labelField}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name={`schema.${index}.name`}
+                      control={control}
+                      rules={{ required: 'name属性を入力してください。' }}
+                      render={({ field: nameField }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>name属性</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="name属性を入力"
+                              {...nameField}
                             />
                           </FormControl>
                           <FormMessage />

@@ -39,7 +39,6 @@ export async function POST(request: Request) {
         userId,
       },
     });
-    console.log(form);
 
     return NextResponse.json(form, { status: 201 });
   } catch (error) {
