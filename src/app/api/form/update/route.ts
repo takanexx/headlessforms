@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const { id, title, schema, userId } = await request.json();
-    console.log(id, title, schema, userId);
     const form = await prisma.form.findUnique({
       where: {
         id: id,

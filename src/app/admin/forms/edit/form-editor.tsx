@@ -20,10 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Toaster } from '@/components/ui/sonner';
 import { Plus, Trash } from 'lucide-react';
 import { Session } from 'next-auth';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function FormBuilder({
   session,
@@ -32,6 +34,7 @@ export default function FormBuilder({
   session: Session | null;
   form?: { id: string; title: string; schema: string; userId: string };
 }) {
+  const router = useRouter();
   const [title, setTitle] = useState(form?.title);
   const [error, setError] = useState('');
   // schemaがstring型でも配列型でも対応できるように修正
@@ -56,8 +59,8 @@ export default function FormBuilder({
   const [alertMessage, setAlertMessage] = useState('');
 
   if (!form) {
-    // フォームが存在しない場合は、フォーム作成ページにリダイレクト
-    // redirect('/admin/forms/create');
+    // フォームが存在しない場合は、フォーム一覧ページにリダイレクト
+    router.push('/admin/forms');
   }
 
   const handleAddItem = () => {
@@ -89,8 +92,8 @@ export default function FormBuilder({
         throw new Error('フォーム編集に失敗しました。');
       }
 
-      // フォーム一覧画面へリダイレクト
-      redirect('/admin/forms');
+      // toasterを表示する
+      toast.success('フォームを編集しました。');
     } catch (error) {
       console.error(error);
       setAlertMessage('フォームの編集に失敗しました。');
@@ -222,6 +225,7 @@ export default function FormBuilder({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Toaster />
     </Card>
   );
 }
