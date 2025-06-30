@@ -48,6 +48,7 @@ export default function FormsPage() {
       key => rowSelection[key],
     );
     if (selectedIds.length === 0) return;
+
     try {
       const res = await fetch('/api/form/delete', {
         method: 'POST',
@@ -56,13 +57,14 @@ export default function FormsPage() {
         },
         body: JSON.stringify({ formId: selectedIds }), // 複数ID対応APIならformId: selectedIds、単一ならループで送信
       });
-      if (res.ok) {
-        toast.success('選択したフォームを削除しました。');
-        setForms(forms.filter(form => !selectedIds.includes(form.id)));
-        setRowSelection({});
-      } else {
-        toast.error('フォームの削除に失敗しました。');
+
+      if (!res.ok) {
+        throw new Error('フォームの削除に失敗しました。');
       }
+
+      toast.success('選択したフォームを削除しました。');
+      setForms(forms.filter(form => !selectedIds.includes(form.id)));
+      setRowSelection({});
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
