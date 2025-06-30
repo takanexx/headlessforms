@@ -1,6 +1,17 @@
 'use client';
 
 import { Form, getColumns } from '@/app/admin/forms/columns';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Pagination } from '@/components/ui/pagination';
@@ -85,13 +96,30 @@ export default function FormsPage() {
           <div className="my-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold">フォーム一覧</h1>
             <div className="flex gap-2">
-              <Button
-                variant="destructive"
-                onClick={handleBulkDelete}
-                disabled={selectedCount === 0}
-              >
-                削除{selectedCount > 0 ? `（${selectedCount}件）` : ''}
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" disabled={selectedCount === 0}>
+                    削除{selectedCount > 0 ? `（${selectedCount}件）` : ''}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      この操作は取り消せません。選択したフォームが完全に削除されます。
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleBulkDelete}
+                      disabled={selectedCount === 0}
+                    >
+                      削除
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <Link href="/admin/forms/create">
                 <Button>
                   <Plus />
