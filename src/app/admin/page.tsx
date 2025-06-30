@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { getPlanAnswerLimit, getPlanFormLimit } from '@/utils/plans';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -12,6 +13,11 @@ export default async function AdminPage() {
     redirect('/login');
   }
   const user = session?.user || { name: 'ユーザー' };
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const forms = await fetch(`${baseUrl}/api/form/list`).then(res => res.json());
+  const answers = await fetch(`${baseUrl}/api/answer/list`).then(res =>
+    res.json(),
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -49,17 +55,21 @@ export default async function AdminPage() {
             <Separator orientation="horizontal" />
             <div className="flex gap-8 mt-2">
               <div>
-                <div className="text-2xl font-bold">1</div>
+                <div className="text-2xl font-bold">{forms.length ?? 0}</div>
                 <div className="text-xs text-muted-foreground">フォーム数</div>
               </div>
               <Separator orientation="vertical" />
               <div>
-                <div className="text-2xl font-bold">2</div>
+                <div className="text-2xl font-bold">
+                  {getPlanFormLimit(user.plan) - forms.length || 0}
+                </div>
                 <div className="text-xs text-muted-foreground">残数</div>
               </div>
               <Separator orientation="vertical" />
               <div>
-                <div className="text-2xl font-bold">3</div>
+                <div className="text-2xl font-bold">
+                  {getPlanFormLimit(user.plan)}
+                </div>
                 <div className="text-xs text-muted-foreground">Limit forms</div>
               </div>
             </div>
@@ -83,19 +93,23 @@ export default async function AdminPage() {
             <Separator orientation="horizontal" />
             <div className="flex gap-8 mt-2">
               <div>
-                <div className="text-2xl font-bold">20</div>
+                <div className="text-2xl font-bold">{answers.length ?? 0}</div>
                 <div className="text-xs text-muted-foreground">Answers</div>
               </div>
               <Separator orientation="vertical" />
               <div>
-                <div className="text-2xl font-bold">80</div>
+                <div className="text-2xl font-bold">
+                  {getPlanAnswerLimit(user.plan) - answers.length || 0}
+                </div>
                 <div className="text-xs text-muted-foreground">
                   Left Answers
                 </div>
               </div>
               <Separator orientation="vertical" />
               <div>
-                <div className="text-2xl font-bold">100</div>
+                <div className="text-2xl font-bold">
+                  {getPlanAnswerLimit(user.plan)}
+                </div>
                 <div className="text-xs text-muted-foreground">
                   Per month limit
                 </div>
