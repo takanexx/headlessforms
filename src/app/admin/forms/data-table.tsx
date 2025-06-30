@@ -43,6 +43,7 @@ export function DataTable({
     enableRowSelection: true,
     onRowSelectionChange,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: row => row.id,
   });
 
   return (

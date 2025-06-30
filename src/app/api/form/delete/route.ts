@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const { formId } = await request.json(); // formId: string[]
-    console.log('formId:', formId);
+    console.log(formId);
     if (!Array.isArray(formId) || formId.length === 0) {
       return NextResponse.json(
         { error: '削除対象のフォームIDが指定されていません。' },
