@@ -114,7 +114,10 @@ export default function FormBuilder({ session }: { session: Session | null }) {
 
       console.log(response);
       if (!response.ok) {
-        throw new Error('フォーム作成に失敗しました。');
+        const errorData = await response.json();
+        setAlertMessage(errorData?.error || 'フォーム作成に失敗しました。');
+        setAlertOpen(true);
+        return;
       }
 
       // フォーム一覧画面へリダイレクト
@@ -123,9 +126,18 @@ export default function FormBuilder({ session }: { session: Session | null }) {
         sessionStorage.setItem('formCreated', '1');
       }
       router.push('/admin/forms');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
-      setAlertMessage('フォームの作成に失敗しました。');
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'message' in error &&
+        typeof (error as { message?: unknown }).message === 'string'
+      ) {
+        setAlertMessage((error as { message: string }).message);
+      } else {
+        setAlertMessage('フォームの作成に失敗しました。');
+      }
       setAlertOpen(true);
     }
   };
