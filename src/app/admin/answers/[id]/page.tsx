@@ -1,6 +1,15 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -57,48 +66,66 @@ export default function AnswerDetailPage() {
   }
 
   return (
-    <div className="flex justify-center p-8">
-      <Card className="w-full max-w-2xl p-6">
-        <h1 className="text-2xl font-bold mb-4">回答詳細</h1>
-        <div className="mb-2">
-          <span className="font-semibold">回答ID：</span>
-          {answer.id}
+    <div className="flex bg-background dark:bg-background">
+      <div className="flex-1 flex flex-col">
+        <div className="flex-1 p-6">
+          <h1 className="text-2xl font-bold mb-4">回答詳細</h1>
+          <Card className="p-6">
+            <div className="grid gap-y-6">
+              <div className="grid grid-cols-6 gap-x-4">
+                <p className="font-semibold">フォーム名</p>
+                <p className="col-span-5">{answer.form?.title ?? '-'}</p>
+              </div>
+              <div className="grid grid-cols-6 gap-x-4">
+                <p className="font-semibold">回答ID</p>
+                <p className="col-span-5">{answer.id}</p>
+              </div>
+
+              <div className="grid grid-cols-6 gap-x-4">
+                <p className="font-semibold">回答日時</p>
+                <p className="col-span-5">
+                  {new Date(answer.createdAt).toLocaleString()}
+                </p>
+              </div>
+              <div className="grid grid-cols-6 gap-x-4">
+                <p className="font-semibold">回答内容</p>
+                <div className="col-span-5">
+                  <Table className="col-span-5">
+                    <TableCaption>回答内容</TableCaption>
+                    <TableHeader>
+                      <TableRow className="">
+                        <TableHead className="font-semibold">項目名</TableHead>
+                        <TableHead className="font-semibold">回答</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {answer.answers &&
+                        Object.entries(answer.answers).map(([key, value]) => (
+                          <TableRow key={key}>
+                            <TableHead>{key}</TableHead>
+                            <TableCell>
+                              {typeof value === 'object'
+                                ? JSON.stringify(value)
+                                : String(value)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            </div>
+            {answer.meta && (
+              <div className="mb-2">
+                <span className="font-semibold">メタ情報：</span>
+                <pre className="bg-gray-100 p-2 rounded text-xs">
+                  {JSON.stringify(answer.meta, null, 2)}
+                </pre>
+              </div>
+            )}
+          </Card>
         </div>
-        <div className="mb-2">
-          <span className="font-semibold">フォーム名：</span>
-          {answer.form?.title ?? '-'}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">回答者：</span>
-          {answer.user?.name ?? answer.user?.email ?? '-'}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">回答日時：</span>
-          {new Date(answer.createdAt).toLocaleString()}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">回答内容：</span>
-          <ul className="list-disc ml-6">
-            {answer.answers &&
-              Object.entries(answer.answers).map(([key, value]) => (
-                <li key={key}>
-                  <span className="font-medium">{key}：</span>
-                  {typeof value === 'object'
-                    ? JSON.stringify(value)
-                    : String(value)}
-                </li>
-              ))}
-          </ul>
-        </div>
-        {answer.meta && (
-          <div className="mb-2">
-            <span className="font-semibold">メタ情報：</span>
-            <pre className="bg-gray-100 p-2 rounded text-xs">
-              {JSON.stringify(answer.meta, null, 2)}
-            </pre>
-          </div>
-        )}
-      </Card>
+      </div>
     </div>
   );
 }
