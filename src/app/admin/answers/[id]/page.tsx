@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -46,7 +45,7 @@ export default function AnswerDetailPage() {
         }
         const data = await res.json();
         setAnswer(data);
-      } catch (e) {
+      } catch {
         setError('通信エラーが発生しました。');
       } finally {
         setLoading(false);
@@ -87,12 +86,11 @@ export default function AnswerDetailPage() {
                   {new Date(answer.createdAt).toLocaleString()}
                 </p>
               </div>
-              <div className="grid grid-cols-6 gap-x-4">
+              <div className="grid gap-y-4">
                 <p className="font-semibold">回答内容</p>
-                <div className="col-span-5">
-                  <Table className="col-span-5">
-                    <TableCaption>回答内容</TableCaption>
-                    <TableHeader>
+                <div className="rounded-md border">
+                  <Table className="">
+                    <TableHeader className="bg-muted">
                       <TableRow className="">
                         <TableHead className="font-semibold">項目名</TableHead>
                         <TableHead className="font-semibold">回答</TableHead>
