@@ -1,13 +1,20 @@
-import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-    const userId = session?.user?.id;
-    const plan = (session?.user?.plan || 'Free').toLowerCase();
+    const { response, formId } = await request.json();
 
+    // フォームのschema情報を取得
+    const form = await prisma.form.findUnique({ where: { id: formId } });
+    if (!form) {
+      return NextResponse.json(
+        { error: '該当するフォームが見つかりません。' },
+        { status: 404 },
+      );
+    }
+
+    const userId = form?.userId;
     if (!userId) {
       return NextResponse.json(
         { error: 'ユーザー情報が取得できません。ログインし直してください。' },
@@ -15,7 +22,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const { schema: answers, formId } = await request.json();
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    const plan = (user?.plan || 'Free').toLowerCase();
 
     // 今月の開始・終了日時を計算
     const now = new Date();
@@ -64,24 +76,21 @@ export async function POST(request: Request) {
       );
     }
 
-    // フォームのschema情報を取得
-    const form = await prisma.form.findUnique({ where: { id: formId } });
-    if (!form) {
-      return NextResponse.json(
-        { error: '該当するフォームが見つかりません。' },
-        { status: 404 },
-      );
-    }
-    const formSchema = form.schema as Array<{ type: string; label: string }>;
+    const formSchema = form.schema as Array<{
+      type: string;
+      label: string;
+      name: string;
+    }>;
 
     // バリデーション
     const errors: string[] = [];
     for (const item of formSchema) {
-      const value = answers[item.label];
+      const value = response[item.name];
       if (value === undefined || value === null || value === '') {
         errors.push(`「${item.label}」は必須です。`);
         continue;
       }
+
       switch (item.type) {
         case 'email':
           if (
@@ -117,6 +126,7 @@ export async function POST(request: Request) {
           }
       }
     }
+
     if (errors.length > 0) {
       return NextResponse.json(
         { error: 'バリデーションエラー', details: errors },
@@ -129,7 +139,7 @@ export async function POST(request: Request) {
       data: {
         formId,
         userId,
-        answers,
+        answers: response,
       },
     });
 
