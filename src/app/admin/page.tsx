@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { getPlanAnswerLimit, getPlanFormLimit } from '@/utils/plans';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import HomeChart from './home-chart';
 
 export default async function AdminPage() {
   const session = await auth();
@@ -146,8 +147,9 @@ export default async function AdminPage() {
           </div>
           <Separator />
           {/* チャートダミーエリア */}
-          <div className="h-64 flex items-center justify-center text-muted-foreground bg-muted rounded">
-            チャートが表示されます
+          <div className="items-center justify-center text-muted-foreground bg-muted rounded">
+            {/* チャートが表示されます */}
+            <HomeChart />
           </div>
           {/* 凡例 */}
           <div className="flex gap-4 mt-2 text-xs">

@@ -89,11 +89,11 @@ export default function AnswerDetailPage() {
               <div className="grid gap-y-4">
                 <p className="font-semibold">回答内容</p>
                 <div className="rounded-md border">
-                  <Table className="">
+                  <Table>
                     <TableHeader className="bg-muted">
-                      <TableRow className="">
-                        <TableHead className="font-semibold">項目名</TableHead>
-                        <TableHead className="font-semibold">回答</TableHead>
+                      <TableRow>
+                        <TableHead>項目名</TableHead>
+                        <TableHead>回答</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
