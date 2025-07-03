@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { getPlanAnswerLimit, getPlanFormLimit } from '@/utils/plans';
+import { Answer } from '@prisma/client';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import HomeChart from './home-chart';
@@ -18,6 +19,13 @@ export default async function AdminPage() {
   const forms = await fetch(`${baseUrl}/api/form/list`).then(res => res.json());
   const answers = await fetch(`${baseUrl}/api/answer/list`).then(res =>
     res.json(),
+  );
+
+  // 今月の回答数を取得
+  const MonthAnswers = answers.filter(
+    (answer: Answer) =>
+      new Date(answer.createdAt).getFullYear() === new Date().getFullYear() &&
+      new Date(answer.createdAt).getMonth() === new Date().getMonth(),
   );
 
   return (
@@ -147,28 +155,9 @@ export default async function AdminPage() {
           </div>
           <Separator />
           {/* チャートダミーエリア */}
-          <div className="items-center justify-center text-muted-foreground bg-muted rounded">
+          <div className="items-center justify-center text-muted-foreground bg-muted rounded p-6">
             {/* チャートが表示されます */}
-            <HomeChart />
-          </div>
-          {/* 凡例 */}
-          <div className="flex gap-4 mt-2 text-xs">
-            <div className="flex items-center gap-1">
-              <span className="inline-block w-3 h-3 rounded-full bg-lime-400"></span>
-              Android Medium
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block w-3 h-3 rounded-full bg-lime-600"></span>
-              Android Large
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block w-3 h-3 rounded-full bg-blue-400"></span>
-              iOS Medium
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block w-3 h-3 rounded-full bg-blue-600"></span>
-              iOS Large
-            </div>
+            <HomeChart answers={MonthAnswers} />
           </div>
         </Card>
       </div>

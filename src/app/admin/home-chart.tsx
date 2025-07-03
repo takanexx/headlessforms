@@ -1,17 +1,29 @@
 'use client';
 
 import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+import { Answer } from '@prisma/client';
+import { useEffect, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
-export default function HomeChart() {
-  const chartData = [
-    { month: 'January', desktop: 186 },
-    { month: 'February', desktop: 305 },
-    { month: 'March', desktop: 237 },
-    { month: 'April', desktop: 73 },
-    { month: 'May', desktop: 209 },
-    { month: 'June', desktop: 214 },
-  ];
+export default function HomeChart({ answers }: { answers: Answer[] }) {
+  const [chartData, setChartData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const chartData = answers.map(answer => ({
+      date: answer.createdAt,
+      desktop: 1,
+    }));
+    setChartData(chartData);
+  }, [answers]);
+
+  //   const chartData = [
+  //     { month: 'January', desktop: 186 },
+  //     { month: 'February', desktop: 305 },
+  //     { month: 'March', desktop: 237 },
+  //     { month: 'April', desktop: 73 },
+  //     { month: 'May', desktop: 209 },
+  //     { month: 'June', desktop: 214 },
+  //   ];
 
   const chartConfig = {
     desktop: {
@@ -25,7 +37,7 @@ export default function HomeChart() {
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="month"
+          dataKey="date"
           tickLine={false}
           tickMargin={10}
           axisLine={false}
