@@ -1,33 +1,56 @@
 'use client';
 
-import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
 import { Answer } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 export default function HomeChart({ answers }: { answers: Answer[] }) {
-  const [chartData, setChartData] = useState<any[]>([]);
+  type ChartData = { date: string; answers: number };
+  const [chartData, setChartData] = useState<ChartData[]>([]);
 
   useEffect(() => {
-    const chartData = answers.map(answer => ({
-      date: answer.createdAt,
-      desktop: 1,
+    // 今月の1日と末日を取得
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const lastDay = new Date(year, month + 1, 0);
+
+    // 今月の日付配列を生成
+    const daysInMonth = lastDay.getDate();
+    const days = [...Array(daysInMonth)].map((_, i) => {
+      const d = new Date(year, month, i + 1);
+      return d.toISOString().slice(0, 10);
+    });
+
+    // answersを日付ごとにカウント
+    const counts = answers.reduce((acc: Record<string, number>, answer) => {
+      const dateObj =
+        typeof answer.createdAt === 'string'
+          ? new Date(answer.createdAt)
+          : answer.createdAt;
+      const date = dateObj.toISOString().slice(0, 10);
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+
+    // チャート用データ生成
+    const chartData = days.map(date => ({
+      date,
+      answers: counts[date] || 0,
     }));
+
     setChartData(chartData);
   }, [answers]);
 
-  //   const chartData = [
-  //     { month: 'January', desktop: 186 },
-  //     { month: 'February', desktop: 305 },
-  //     { month: 'March', desktop: 237 },
-  //     { month: 'April', desktop: 73 },
-  //     { month: 'May', desktop: 209 },
-  //     { month: 'June', desktop: 214 },
-  //   ];
-
   const chartConfig = {
-    desktop: {
-      label: 'Desktop',
+    answers: {
+      label: 'Answers',
       color: '#2563eb',
     },
   } satisfies ChartConfig;
@@ -41,9 +64,17 @@ export default function HomeChart({ answers }: { answers: Answer[] }) {
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={value => value.slice(0, 3)}
+          // X軸ラベルを「M/D」形式で表示
+          tickFormatter={value => {
+            const d = new Date(value);
+            return `${d.getMonth() + 1}/${d.getDate()}`;
+          }}
         />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent hideLabel />}
+        />
+        <Bar dataKey="answers" fill="var(--color-answers)" radius={8} />
       </BarChart>
     </ChartContainer>
   );
