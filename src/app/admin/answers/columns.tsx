@@ -7,6 +7,7 @@ export type Answer = {
   id: string;
   respondent: string;
   createdAt: string;
+  formTitle: string;
 };
 
 export function getColumns(): ColumnDef<Answer>[] {
@@ -14,6 +15,11 @@ export function getColumns(): ColumnDef<Answer>[] {
     {
       accessorKey: 'id',
       header: 'ID',
+      cell: info => info.getValue(),
+    },
+    {
+      accessorKey: 'formTitle',
+      header: 'フォーム名',
       cell: info => info.getValue(),
     },
     {
