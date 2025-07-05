@@ -10,8 +10,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Toaster } from '@/components/ui/sonner';
-import { format } from 'date-fns';
+import { format, isAfter, isBefore, isEqual } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import { Answer, getColumns } from './columns';
@@ -20,8 +27,14 @@ import { DataTable } from './data-table';
 export default function AnswersPage() {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [idSearch, setIdSearch] = useState('');
-  const [dateSearch, setDateSearch] = useState<Date | undefined>(undefined);
-  const [formSearch, setFormSearch] = useState('');
+  const [dateSearch, setDateSearch] = useState<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>({ from: undefined, to: undefined });
+  const [formSearch, setFormSearch] = useState('all');
+  const formTitles = Array.from(new Set(answers.map(a => a.formTitle))).filter(
+    Boolean,
+  );
 
   useEffect(() => {
     async function fetchAnswers() {
@@ -44,14 +57,25 @@ export default function AnswersPage() {
 
   const filteredAnswers = answers.filter(a => {
     const idMatch = a.id.includes(idSearch);
-    const formMatch = a.formTitle.includes(formSearch);
+    const formMatch = formSearch === 'all' || a.formTitle === formSearch;
     let dateMatch = true;
-    if (dateSearch) {
+    if (dateSearch.from || dateSearch.to) {
       const answerDate = new Date(a.createdAt);
-      dateMatch =
-        answerDate.getFullYear() === dateSearch.getFullYear() &&
-        answerDate.getMonth() === dateSearch.getMonth() &&
-        answerDate.getDate() === dateSearch.getDate();
+      if (dateSearch.from && dateSearch.to) {
+        dateMatch =
+          (isAfter(answerDate, dateSearch.from) ||
+            isEqual(answerDate, dateSearch.from)) &&
+          (isBefore(answerDate, dateSearch.to) ||
+            isEqual(answerDate, dateSearch.to));
+      } else if (dateSearch.from) {
+        dateMatch =
+          isAfter(answerDate, dateSearch.from) ||
+          isEqual(answerDate, dateSearch.from);
+      } else if (dateSearch.to) {
+        dateMatch =
+          isBefore(answerDate, dateSearch.to) ||
+          isEqual(answerDate, dateSearch.to);
+      }
     }
     return idMatch && dateMatch && formMatch;
   });
@@ -73,37 +97,56 @@ export default function AnswersPage() {
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  id="date-range-picker"
                   variant="outline"
                   className="max-w-xs w-full justify-start text-left font-normal"
                 >
-                  {dateSearch
-                    ? format(dateSearch, 'yyyy/MM/dd', { locale: ja })
-                    : '日付を選択'}
+                  {dateSearch.from && dateSearch.to
+                    ? `${format(dateSearch.from, 'yyyy/MM/dd', { locale: ja })} 〜 ${format(dateSearch.to, 'yyyy/MM/dd', { locale: ja })}`
+                    : dateSearch.from
+                      ? `${format(dateSearch.from, 'yyyy/MM/dd', { locale: ja })} 〜`
+                      : dateSearch.to
+                        ? `〜 ${format(dateSearch.to, 'yyyy/MM/dd', { locale: ja })}`
+                        : '日付範囲を選択'}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
-                  mode="single"
+                  mode="range"
                   selected={dateSearch}
-                  onSelect={setDateSearch}
+                  onSelect={range =>
+                    setDateSearch(range ?? { from: undefined, to: undefined })
+                  }
+                  numberOfMonths={2}
                   locale={ja}
                   initialFocus
                 />
-                <Button
-                  variant="ghost"
-                  className="mt-2 w-full"
-                  onClick={() => setDateSearch(undefined)}
-                >
-                  クリア
-                </Button>
+                <div className="flex justify-end mt-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setDateSearch({ from: undefined, to: undefined })
+                    }
+                  >
+                    クリア
+                  </Button>
+                </div>
               </PopoverContent>
             </Popover>
-            <Input
-              value={formSearch}
-              onChange={e => setFormSearch(e.target.value)}
-              placeholder="フォーム名で検索"
-              className="max-w-xs"
-            />
+            <Select value={formSearch} onValueChange={setFormSearch}>
+              <SelectTrigger className="max-w-xs w-full">
+                <SelectValue placeholder="フォーム名で絞り込み" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">すべて</SelectItem>
+                {formTitles.map(title => (
+                  <SelectItem key={title} value={title}>
+                    {title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Card>
           <Card className="p-4">
             <DataTable columns={columns} data={filteredAnswers} />
