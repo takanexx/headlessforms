@@ -2,6 +2,7 @@ import { ThemeToggleButton } from '@/components/theme-toggle-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Home() {
@@ -12,9 +13,12 @@ export default function Home() {
         <div className="absolute top-4 right-4">
           <ThemeToggleButton />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
-          HeadlessForms
-        </h1>
+        <Image
+          src={'/headlessforms-logo.png'}
+          width={700}
+          height={200}
+          alt="HeadlessForms"
+        />
         <div className="text-lg sm:text-xl text-center max-w-xl my-10">
           <p className="">UI/UXは完全に自由。</p>
           <p className="">アンケート設計・収集・分析APIプラットフォーム</p>
