@@ -1,90 +1,145 @@
 'use client';
 
-import SignIn from '@/components/sign-in';
-import { ThemeToggleButton } from '@/components/theme-toggle-button';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { useState } from 'react';
 
 const plans = [
   {
     name: 'Free',
-    price: '0円',
-    description: ['フォーム3個まで', '月100回答まで'],
+    title: 'Free plan',
+    price: 0,
+    priceUnit: 'month',
+    description: 'The best way to start using EAS, no credit card required.',
+    features: [
+      '30 mobile app builds per month',
+      'Submit to the app stores',
+      'Send updates to 1,000 MAUs',
+    ],
+    buttonText: 'Select Plan',
+    highlight: false,
+    badge: null,
+    bottomLink: null,
   },
   {
     name: 'Pro',
-    price: '980円',
-    description: ['フォーム10個まで', '月1,000回答まで'],
+    title: 'Starter plan',
+    price: 19,
+    priceUnit: 'month',
+    description: 'For developers ready to launch real-world apps.',
+    features: [
+      '$30 of build credit',
+      'Skip the line with high priority builds',
+      'Send updates to 3,000 MAUs',
+    ],
+    buttonText: 'Select Plan',
+    highlight: true,
+    badge: 'Popular',
+    bottomLink: null,
   },
   {
     name: 'Business',
-    price: '4,980円',
-    description: ['フォーム無制限', '回答無制限', 'Webhook対応'],
+    title: 'Production plan',
+    price: 99,
+    priceUnit: 'month',
+    description: 'For teams with growing user bases.',
+    features: [
+      '$100 of build credit',
+      'Send updates to 50,000 MAUs',
+      '2 build concurrencies',
+    ],
+    buttonText: 'Select Plan',
+    highlight: false,
+    badge: null,
+    bottomLink: {
+      text: 'Need more? Talk to our team.',
+      href: '#',
+    },
   },
 ];
 
 export default function PricingPage() {
-  const [selected, setSelected] = useState(0);
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="relative min-h-screen flex flex-col bg-background text-foreground px-4">
-      <div className="absolute top-4 right-4">
-        <ThemeToggleButton />
+    <div className="min-h-screen flex flex-col bg-white text-gray-900 px-4">
+      {/* Header */}
+      <div className="flex flex-col items-center mt-16 mb-10">
+        <h1 className="text-5xl font-extrabold text-center mb-4 leading-tight">
+          Make incredible apps.
+          <br />
+          With pricing to match.
+        </h1>
+        <p className="text-lg text-gray-600 text-center max-w-2xl">
+          Build, submit, and update your app, all with pricing that scales as
+          you grow. Great for any React Native app.
+        </p>
       </div>
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <h1 className="text-3xl font-bold mb-8">料金プラン</h1>
-        <div className="w-full max-w-5xl flex flex-col md:flex-row gap-6 justify-center my-15">
-          {plans.map((plan, idx) => (
-            <button
-              key={plan.name}
-              type="button"
-              onClick={() => setSelected(idx)}
-              className="flex-1 focus:outline-none"
-              style={{ minWidth: 0 }}
-            >
-              <Card
-                className={`w-full h-full flex flex-col items-center p-6 shadow-md border-2 transition-all
+      {/* Plans */}
+      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8 justify-center mx-auto">
+        {plans.map(plan => (
+          <div
+            key={plan.name}
+            className={`flex-1 flex flex-col rounded-2xl border border-gray-200 shadow-md bg-white transition-all
+              ${plan.highlight ? 'border-blue-500 shadow-blue-100 relative' : ''}
+            `}
+            style={{ minWidth: 0 }}
+          >
+            {/* Badge */}
+            {plan.badge && (
+              <span className="absolute top-6 right-6 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">
+                {plan.badge}
+              </span>
+            )}
+            {/* Card Content */}
+            <div className="flex-1 flex flex-col px-8 pt-8 pb-0">
+              <div className="text-lg font-semibold mb-1">{plan.title}</div>
+              <div className="text-sm text-gray-500 mb-4">
+                {plan.description}
+              </div>
+              <div className="text-3xl font-bold mb-1">
+                {plan.price === 0 ? 'Free' : `$${plan.price}/${plan.priceUnit}`}
+              </div>
+              {plan.price !== 0 && (
+                <div className="text-xs text-gray-500 mb-4">
+                  + additional usage
+                </div>
+              )}
+              {plan.price === 0 && <div className="mb-6" />}
+              <Button
+                className={`w-full mt-2 mb-6 py-2 text-base font-semibold rounded-lg border border-gray-300
                   ${
-                    selected === idx
-                      ? 'border-blue-500 shadow-blue-200 ring-2 ring-blue-200 bg-blue-50 dark:bg-blue-900'
-                      : 'border-gray-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer'
-                  }`}
+                    plan.highlight
+                      ? 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'
+                      : 'bg-white text-gray-900 hover:bg-gray-100'
+                  }
+                `}
               >
-                <div className="text-xl font-semibold mb-2">{plan.name}</div>
-                <div className="text-3xl font-bold mb-4">{plan.price}/月</div>
-                <ul className="mb-4 space-y-1 text-center">
-                  {plan.description.map((item, i) => (
-                    <li key={i} className="text-gray-700">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            </button>
-          ))}
-        </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <Button className="mt-8 w-60 text-lg" onClick={() => setOpen(true)}>
-            {plans[selected].name}で始める
-          </Button>
-          <DialogContent>
-            <DialogTitle>アカウント登録</DialogTitle>
-            <DialogDescription>
-              Googleアカウントで簡単に始められます。登録後すぐにプランを選択できます。
-            </DialogDescription>
-            <div className="flex flex-col items-center mt-4">
-              <SignIn />
+                {plan.buttonText}
+              </Button>
             </div>
-          </DialogContent>
-        </Dialog>
+            {/* Features */}
+            <div className="bg-gray-50 border-t border-gray-200 rounded-b-2xl px-8 py-6 min-h-[140px] flex flex-col justify-between">
+              <ul className="space-y-2 mb-2">
+                {plan.features.map((item, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center text-gray-700 text-sm"
+                  >
+                    <span className="mr-2 text-blue-500">✔</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              {plan.bottomLink && (
+                <div className="mt-2 text-xs text-gray-500">
+                  <a
+                    href={plan.bottomLink.href}
+                    className="text-blue-600 underline hover:text-blue-800"
+                  >
+                    {plan.bottomLink.text}
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
