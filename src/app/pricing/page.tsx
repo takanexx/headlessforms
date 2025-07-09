@@ -1,6 +1,8 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardFooter } from '@/components/ui/card';
 
 const plans = [
   {
@@ -83,61 +85,49 @@ export default function PricingPage() {
           >
             {/* Badge */}
             {plan.badge && (
-              <span className="absolute top-6 right-6 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">
+              <Badge className="absolute top-6 right-6 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">
                 {plan.badge}
-              </span>
+              </Badge>
             )}
             {/* Card Content */}
-            <div className="flex-1 flex flex-col px-8 pt-8 pb-0">
-              <div className="text-lg font-semibold mb-1">{plan.title}</div>
-              <div className="text-sm text-gray-500 mb-4">
-                {plan.description}
-              </div>
-              <div className="text-3xl font-bold mb-1">
-                {plan.price === 0 ? 'Free' : `$${plan.price}/${plan.priceUnit}`}
-              </div>
-              {plan.price !== 0 && (
-                <div className="text-xs text-gray-500 mb-4">
-                  + additional usage
+            <Card className="flex-1 flex flex-col pb-0">
+              <div className="px-6 pt-4 pb-0 min-h-[160px]">
+                <div className="text-lg font-semibold mb-1">{plan.title}</div>
+                <div className="text-sm text-gray-500 mb-4 min-h-[40px]">
+                  {plan.description}
                 </div>
-              )}
-              {plan.price === 0 && <div className="mb-6" />}
-              <Button
-                className={`w-full mt-2 mb-6 py-2 text-base font-semibold rounded-lg border border-gray-300
+                <div className="text-3xl font-bold mb-6">
+                  {plan.price === 0
+                    ? 'Free'
+                    : `$${plan.price}/${plan.priceUnit}`}
+                </div>
+                <Button
+                  className={`w-full mt-2 mb-6 py-2 text-base font-semibold rounded-lg border border-gray-300
                   ${
                     plan.highlight
                       ? 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'
                       : 'bg-white text-gray-900 hover:bg-gray-100'
                   }
                 `}
-              >
-                {plan.buttonText}
-              </Button>
-            </div>
-            {/* Features */}
-            <div className="bg-gray-50 border-t border-gray-200 rounded-b-2xl px-8 py-6 min-h-[140px] flex flex-col justify-between">
-              <ul className="space-y-2 mb-2">
-                {plan.features.map((item, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center text-gray-700 text-sm"
-                  >
-                    <span className="mr-2 text-blue-500">✔</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              {plan.bottomLink && (
-                <div className="mt-2 text-xs text-gray-500">
-                  <a
-                    href={plan.bottomLink.href}
-                    className="text-blue-600 underline hover:text-blue-800"
-                  >
-                    {plan.bottomLink.text}
-                  </a>
-                </div>
-              )}
-            </div>
+                >
+                  {plan.buttonText}
+                </Button>
+              </div>
+              {/* Features */}
+              <CardFooter className="bg-gray-50 border-t rounded-b-2xl border-gray-200 px-6 py-6 min-h-[140px]">
+                <ul className="space-y-2">
+                  {plan.features.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-center text-gray-700 text-sm"
+                    >
+                      <span className="mr-2 text-blue-500">✔</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </CardFooter>
+            </Card>
           </div>
         ))}
       </div>
