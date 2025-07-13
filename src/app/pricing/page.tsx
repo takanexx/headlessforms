@@ -14,7 +14,7 @@ import { useState } from 'react';
 
 const plans = [
   {
-    name: 'Free',
+    name: 'free',
     title: 'Free plan',
     price: 0,
     priceUnit: 'month',
@@ -28,9 +28,10 @@ const plans = [
     highlight: false,
     badge: null,
     bottomLink: null,
+    redirectTo: '/admin',
   },
   {
-    name: 'Pro',
+    name: 'pro',
     title: 'Starter plan',
     price: 19,
     priceUnit: 'month',
@@ -44,9 +45,10 @@ const plans = [
     highlight: true,
     badge: 'Popular',
     bottomLink: null,
+    redirectTo: '/checkout?plan=pro',
   },
   {
-    name: 'Business',
+    name: 'business',
     title: 'Production plan',
     price: 99,
     priceUnit: 'month',
@@ -63,6 +65,7 @@ const plans = [
       text: 'Need more? Talk to our team.',
       href: '#',
     },
+    redirectTo: '/checkout?plan=business',
   },
 ];
 
@@ -141,7 +144,7 @@ export default function PricingPage() {
                         </li>
                       ))}
                     </ul>
-                    <SignIn redirectTo="/checkout" />
+                    <SignIn redirectTo={plan.redirectTo} />
                   </DialogContent>
                 </Dialog>
               </div>

@@ -52,18 +52,22 @@ const PaymentForm = () => {
   );
 };
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ plan }: { plan: string }) => {
   const { resolvedTheme } = useTheme();
   const fetchClientSecret = async () => {
     return fetch('/api/checkout/create-session', {
       method: 'POST',
+      body: JSON.stringify({ plan }),
     })
       .then(res => res.json())
       .then(data => data.clientSecret);
   };
 
   const appearance = {
-    theme: (resolvedTheme === 'dark' ? 'night' : 'stripe') as 'night' | 'stripe' | 'flat',
+    theme: (resolvedTheme === 'dark' ? 'night' : 'stripe') as
+      | 'night'
+      | 'stripe'
+      | 'flat',
   };
 
   return (

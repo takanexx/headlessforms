@@ -1,14 +1,13 @@
-import { auth } from '@/auth';
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { redirect } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import CheckoutForm from '../admin/account/checkout-form';
 
-export default async function AccountPage() {
-  const session = await auth();
-  if (!session) {
-    redirect('/login');
-  }
+export default function AccountPage() {
+  const searchParams = useSearchParams();
+  const plan = searchParams.get('plan') ?? 'free';
 
   return (
     <div className="flex bg-background dark:bg-background">
@@ -35,7 +34,7 @@ export default async function AccountPage() {
                 にのみ送信・保存されます
               </p>
             </div>
-            <CheckoutForm />
+            <CheckoutForm plan={plan} />
           </Card>
         </div>
       </div>

@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    // get selected plan
+    const { plan } = await request.json();
+    let priceId = 'price_1RdKboGa94dJvYnTSKI7CuKj'; //  Free plan
+    if (plan === 'pro') {
+      priceId = 'price_1RdKboGa94dJvYnTSKI7CuKj';
+    } else if (plan === 'business') {
+      priceId = 'price_1RdKe2Ga94dJvYnTFh7Ipt68';
+    }
+
     const stripe = new Stripe(process.env.STRIPE_SECRET ?? '');
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -10,12 +19,12 @@ export async function POST() {
       ui_mode: 'custom',
       line_items: [
         {
-          price: 'price_1RdKboGa94dJvYnTSKI7CuKj',
+          price: priceId,
           quantity: 1,
         },
       ],
       payment_method_types: ['card'],
-      return_url: 'http://localhost:3000/admin/account',
+      return_url: 'http://localhost:3000/admin',
     });
 
     return NextResponse.json(
