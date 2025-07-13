@@ -8,7 +8,7 @@ export default function LoginPage() {
         <Card className="p-6 items-center min-w-md">
           <h1 className="font-bold text-xl">Sign In</h1>
           <div className="flex gap-4 items-center flex-col sm:flex-row">
-            <SignIn />
+            <SignIn redirectTo="/admin" />
           </div>
         </Card>
       </main>

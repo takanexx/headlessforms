@@ -1,8 +1,16 @@
 'use client';
 
+import SignIn from '@/components/sign-in';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useState } from 'react';
 
 const plans = [
   {
@@ -59,6 +67,8 @@ const plans = [
 ];
 
 export default function PricingPage() {
+  const [openPlan, setOpenPlan] = useState<string | null>(null);
+
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900 px-4">
       {/* Header */}
@@ -109,9 +119,31 @@ export default function PricingPage() {
                       : 'bg-white text-gray-900 hover:bg-gray-100'
                   }
                 `}
+                  onClick={() => setOpenPlan(plan.name)}
                 >
                   {plan.buttonText}
                 </Button>
+                <Dialog
+                  open={openPlan === plan.name}
+                  onOpenChange={open => setOpenPlan(open ? plan.name : null)}
+                >
+                  <DialogContent>
+                    <DialogTitle>{plan.title}のご案内</DialogTitle>
+                    <DialogDescription>{plan.description}</DialogDescription>
+                    <ul className="space-y-2 mt-4">
+                      {plan.features.map((item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-center text-gray-700 text-sm"
+                        >
+                          <span className="mr-2 text-blue-500">✔</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <SignIn redirectTo="/checkout" />
+                  </DialogContent>
+                </Dialog>
               </div>
               {/* Features */}
               <CardFooter className="bg-gray-50 border-t rounded-b-2xl border-gray-200 px-6 py-6 min-h-[140px]">
