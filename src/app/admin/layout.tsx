@@ -1,5 +1,13 @@
 import AdminSidebar from '@/components/admin/sidebar';
 import { ThemeProvider } from '@/components/theme-provider';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import type { Metadata } from 'next';
@@ -39,13 +47,7 @@ export default function RootLayout({
         >
           <SidebarProvider>
             <AdminSidebar />
-            <main className="w-full">
-              <div className="flex flex-row items-center justify-between w-full p-2">
-                <SidebarTrigger />
-                {/* <AdminHeader /> */}
-              </div>
-              {children}
-            </main>
+            <main className="w-full">{children}</main>
           </SidebarProvider>
         </ThemeProvider>
       </body>

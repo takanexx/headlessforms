@@ -12,9 +12,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Pagination } from '@/components/ui/pagination';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import { RowSelectionState } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
@@ -90,7 +99,23 @@ export default function FormsPage() {
   const selectedCount = Object.values(rowSelection).filter(Boolean).length;
 
   return (
-    <div className="flex bg-background dark:bg-background">
+    <div className="flex flex-col bg-background dark:bg-background">
+      <div className="flex flex-row items-center w-full p-4 pb-0">
+        <SidebarTrigger />
+        <div className="pl-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/admin">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Form</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </div>
       <div className="flex-1 flex flex-col">
         <div className="flex-1 p-6">
           <div className="my-4 flex items-center justify-between">

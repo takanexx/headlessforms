@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { getPlanAnswerLimit, getPlanFormLimit } from '@/utils/plans';
 import { Answer } from '@prisma/client';
 import Link from 'next/link';
@@ -30,8 +31,11 @@ export default async function AdminPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <div className="flex flex-row items-center w-full px-4 pt-4 pb-0">
+        <SidebarTrigger />
+      </div>
       {/* Usageヘッダー */}
-      <div className="flex items-center justify-between px-8 pt-8 pb-2">
+      <div className="flex items-center justify-between px-8 pt-4 pb-2">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold">Home</h1>

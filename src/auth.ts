@@ -12,6 +12,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google({
       // 初期化時にGoogleからユーザー情報を取得
       profile(profile) {
+        console.log('profile', profile);
         return {
           id: profile.sub,
           name: profile.name,

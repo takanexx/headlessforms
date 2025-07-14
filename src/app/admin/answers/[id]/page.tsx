@@ -1,18 +1,19 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import AnswerCard from './answer-card';
 
-type AnswerDetail = {
+export type AnswerDetail = {
   id: string;
   answers: Record<string, unknown>;
   meta?: Record<string, unknown> | null;
@@ -65,63 +66,31 @@ export default function AnswerDetailPage() {
   }
 
   return (
-    <div className="flex bg-background dark:bg-background">
+    <div className="flex flex-col bg-background dark:bg-background">
+      <div className="flex flex-row items-center w-full p-4 pb-0">
+        <SidebarTrigger />
+        <div className="pl-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/admin">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/admin/answers">Answer</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Detail</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </div>
       <div className="flex-1 flex flex-col">
         <div className="flex-1 p-6">
           <h1 className="text-2xl font-bold mb-4">回答詳細</h1>
-          <Card className="p-6">
-            <div className="grid gap-y-6">
-              <div className="grid grid-cols-6 gap-x-4">
-                <p className="font-semibold">フォーム名</p>
-                <p className="col-span-5">{answer.form?.title ?? '-'}</p>
-              </div>
-              <div className="grid grid-cols-6 gap-x-4">
-                <p className="font-semibold">回答ID</p>
-                <p className="col-span-5">{answer.id}</p>
-              </div>
-
-              <div className="grid grid-cols-6 gap-x-4">
-                <p className="font-semibold">回答日時</p>
-                <p className="col-span-5">
-                  {new Date(answer.createdAt).toLocaleString()}
-                </p>
-              </div>
-              <div className="grid gap-y-4">
-                <p className="font-semibold">回答内容</p>
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader className="bg-muted">
-                      <TableRow>
-                        <TableHead>項目名</TableHead>
-                        <TableHead>回答</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {answer.answers &&
-                        Object.entries(answer.answers).map(([key, value]) => (
-                          <TableRow key={key}>
-                            <TableHead>{key}</TableHead>
-                            <TableCell>
-                              {typeof value === 'object'
-                                ? JSON.stringify(value)
-                                : String(value)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </div>
-            {answer.meta && (
-              <div className="mb-2">
-                <span className="font-semibold">メタ情報：</span>
-                <pre className="bg-gray-100 p-2 rounded text-xs">
-                  {JSON.stringify(answer.meta, null, 2)}
-                </pre>
-              </div>
-            )}
-          </Card>
+          <AnswerCard answer={answer} />
         </div>
       </div>
     </div>

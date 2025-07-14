@@ -23,6 +23,15 @@ import { ja } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import { Answer, getColumns } from './columns';
 import { DataTable } from './data-table';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 export default function AnswersPage() {
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -81,7 +90,23 @@ export default function AnswersPage() {
   });
 
   return (
-    <div className="flex bg-background dark:bg-background">
+    <div className="flex flex-col bg-background dark:bg-background">
+      <div className="flex flex-row items-center w-full p-4 pb-0">
+        <SidebarTrigger />
+        <div className="pl-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/admin">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Answer</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </div>
       <div className="flex-1 flex flex-col">
         <div className="flex-1 p-6">
           <div className="my-4 flex items-center justify-between">
