@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         },
       ],
       payment_method_types: ['card'],
-      return_url: 'http://localhost:3000/admin',
+      return_url: `http://localhost:3000/checkout/completed/${plan}`,
     });
 
     return NextResponse.json(
