@@ -29,7 +29,6 @@ const PaymentForm = () => {
     event.preventDefault();
 
     const result = await confirm();
-    console.log(result);
     if (result.type === 'error') {
       toast.error('stripe error');
     }
