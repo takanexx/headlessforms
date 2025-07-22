@@ -20,7 +20,7 @@ export default function AdminSidebarFooter() {
   const user = session?.user ?? { name: 'Username' };
 
   return (
-    <SidebarFooter>
+    <SidebarFooter className="py-4">
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>

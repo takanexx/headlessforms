@@ -12,13 +12,13 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const stripePromise = loadStripe(
+  // Access token
   'pk_test_51RdKWLGa94dJvYnTXzQ8d6yz3ud84Jg4x0xEOpWcDI4HQvNldygTM6XRpLqreI1Sjc6ygXOjwtb5NEYmUa5ty7lB001IXMWwvR',
 );
 
 const PaymentForm = () => {
   const { confirm, updateEmail } = useCheckout();
   const [loading, setLoading] = useState(true);
-  const [p, setP] = useState('');
 
   useEffect(() => {
     // NOTE: this is required for embedded mode
@@ -29,7 +29,7 @@ const PaymentForm = () => {
     event.preventDefault();
 
     const result = await confirm();
-    setP(JSON.stringify(result, null, 2));
+    console.log(result);
     if (result.type === 'error') {
       toast.error('stripe error');
     }
@@ -40,7 +40,6 @@ const PaymentForm = () => {
   return (
     <>
       {loading && <p>Loading...</p>}
-      <p>{p}</p>
       <form onSubmit={handleSubmit}>
         <PaymentElement onReady={() => setLoading(false)} />
         <div className="flex justify-end mt-10">

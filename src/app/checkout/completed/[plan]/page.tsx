@@ -2,8 +2,12 @@ import { Card } from '@/components/ui/card';
 import { SessionProvider } from 'next-auth/react';
 import RedirectAdminButton from './redirect-admin-button';
 
-export default function AccountPage({ params }: { params: { plan: string } }) {
-  const { plan } = params;
+export default async function AccountPage({
+  params,
+}: {
+  params: { plan: string };
+}) {
+  const { plan } = await params;
   return (
     <div className="flex bg-background dark:bg-background">
       <div className="flex-1 flex flex-col">

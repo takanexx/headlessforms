@@ -34,8 +34,8 @@ export default function AdminSidebar() {
 
   return (
     <SessionProvider>
-      <Sidebar className="py-4">
-        <SidebarHeader className="px-4">
+      <Sidebar className="">
+        <SidebarHeader className="p-4">
           <div>
             <img src="/next.svg" alt="Next.js" className="h-10 w-30" />
           </div>
