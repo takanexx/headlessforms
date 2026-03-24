@@ -22,6 +22,15 @@ export default async function AdminPage() {
     res.json(),
   );
 
+  // 今月の期間を算出
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const periodStart = formatDate(monthStart);
+  const periodEnd = formatDate(monthEnd);
+
   // 今月の回答数を取得
   const MonthAnswers = answers.filter(
     (answer: Answer) =>
@@ -42,8 +51,8 @@ export default async function AdminPage() {
           </div>
           <div className="text-muted-foreground text-xs mt-1">
             Showing usage from{' '}
-            <span className="font-semibold">June 1, 2025</span> through{' '}
-            <span className="font-semibold">July 1, 2025</span>
+            <span className="font-semibold">{periodStart}</span> through{' '}
+            <span className="font-semibold">{periodEnd}</span>
           </div>
         </div>
       </div>
@@ -95,8 +104,8 @@ export default async function AdminPage() {
                 <span className="font-semibold">Answers</span>
                 <div className="text-muted-foreground text-xs mt-1">
                   Showing usage from{' '}
-                  <span className="font-semibold">June 1, 2025</span> through{' '}
-                  <span className="font-semibold">July 1, 2025</span>
+                  <span className="font-semibold">{periodStart}</span> through{' '}
+                  <span className="font-semibold">{periodEnd}</span>
                 </div>
               </div>
               <Button variant="outline" size="sm">
