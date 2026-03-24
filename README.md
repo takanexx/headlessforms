@@ -52,6 +52,7 @@ HeadlessFormsは、フォーム/アンケートのバックエンドをAPIとし
 | `/admin/answers` | 回答一覧（絞り込み・日付フィルター） |
 | `/admin/answers/[id]` | 回答詳細 |
 | `/admin/account` | アカウント・請求情報 |
+| `/checkout/completed/[plan]` | 決済完了ページ |
 
 ---
 
