@@ -1,15 +1,27 @@
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const userId = session.user.id;
   try {
     const { formId } = await request.json(); // formId: string[]
-    console.log(formId);
     if (!Array.isArray(formId) || formId.length === 0) {
       return NextResponse.json(
         { error: '削除対象のフォームIDが指定されていません。' },
         { status: 400 },
       );
+    }
+
+    const ownedCount = await prisma.form.count({
+      where: { id: { in: formId }, userId },
+    });
+    if (ownedCount !== formId.length) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     await prisma.$transaction([

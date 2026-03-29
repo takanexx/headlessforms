@@ -14,10 +14,18 @@ export default function Home() {
           <ThemeToggleButton />
         </div>
         <Image
-          src={'/headlessforms-logo.png'}
+          src={'/logo.png'}
           width={700}
           height={200}
           alt="HeadlessForms"
+          className="dark:hidden"
+        />
+        <Image
+          src={'/logo-dark.png'}
+          width={700}
+          height={200}
+          alt="HeadlessForms"
+          className="hidden dark:block"
         />
         <div className="text-lg sm:text-xl text-center max-w-xl my-10">
           <p className="">UI/UXは完全に自由。</p>

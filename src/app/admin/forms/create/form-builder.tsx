@@ -116,7 +116,6 @@ export default function FormBuilder({ session }: { session: Session | null }) {
         body: JSON.stringify({
           title: data.title,
           schema: data.schema,
-          userId: session.user.id,
         }),
       });
 

@@ -5,7 +5,7 @@ import RedirectAdminButton from './redirect-admin-button';
 export default async function AccountPage({
   params,
 }: {
-  params: { plan: string };
+  params: Promise<{ plan: string }>;
 }) {
   const { plan } = await params;
   return (

@@ -84,7 +84,6 @@ export default function FormBuilder({
           id: form?.id,
           title,
           schema: schema,
-          userId: session.user.id,
         }),
       });
 

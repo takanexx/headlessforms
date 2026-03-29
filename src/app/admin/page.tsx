@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { prisma } from '@/lib/prisma';
 import { getPlanAnswerLimit, getPlanFormLimit } from '@/utils/plans';
 import { Answer } from '@prisma/client';
 import Link from 'next/link';
@@ -16,11 +17,9 @@ export default async function AdminPage() {
     redirect('/login');
   }
   const user = session?.user || { name: 'ユーザー' };
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const forms = await fetch(`${baseUrl}/api/form/list`).then(res => res.json());
-  const answers = await fetch(`${baseUrl}/api/answer/list`).then(res =>
-    res.json(),
-  );
+  const userId = session.user?.id ?? '';
+  const forms = await prisma.form.findMany({ where: { userId } });
+  const answers = await prisma.answer.findMany({ where: { userId } });
 
   // 今月の期間を算出
   const now = new Date();

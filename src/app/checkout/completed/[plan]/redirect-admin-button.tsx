@@ -12,10 +12,8 @@ export default function RedirectAdminButton({ plan }: { plan: string }) {
   const savePlan = async () => {
     await fetch('/api/user/update', {
       method: 'POST',
-      body: JSON.stringify({
-        plan,
-        userId: session.data?.user?.id,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan }),
     });
 
     redirect('/admin');

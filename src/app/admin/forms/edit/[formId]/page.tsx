@@ -8,22 +8,25 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { prisma } from '@/lib/prisma';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { redirect } from 'next/navigation';
 
 export default async function EditFormPage({
   params,
 }: {
-  params: { formId: string };
+  params: Promise<{ formId: string }>;
 }) {
   const session = await auth();
-  const { formId } = params;
-  const baseUrl = 'http://localhost:3000';
-  const response = await fetch(`${baseUrl}/api/form/retrieve`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ formId }),
-  });
-  const form = await response.json();
+  if (!session?.user?.id) {
+    redirect('/login');
+  }
+  const { formId } = await params;
+  const form = await prisma.form.findUnique({ where: { id: formId } });
+
+  if (!form || form.userId !== session.user.id) {
+    redirect('/admin/forms');
+  }
 
   return (
     <div className="flex flex-col bg-background dark:bg-background">
@@ -50,7 +53,10 @@ export default async function EditFormPage({
       <div className="flex-1 flex flex-col">
         <div className="flex-1 p-6">
           <h1 className="text-2xl font-bold mb-4">フォーム編集</h1>
-          <FormBuilder session={session} form={form} />
+          <FormBuilder
+            session={session}
+            form={{ ...form, schema: JSON.stringify(form.schema) }}
+          />
         </div>
       </div>
     </div>
