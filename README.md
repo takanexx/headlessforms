@@ -83,6 +83,58 @@ HeadlessFormsは、フォーム/アンケートのバックエンドをAPIとし
 
 ---
 
+## プラン設計
+
+### プラン定義
+
+プラン制限の定数は `src/utils/plans.ts` で一元管理されています。
+
+```ts
+// src/utils/plans.ts
+export const plans = [
+  { name: 'free',     formLimit: 3,        answerLimit: 100      },
+  { name: 'pro',      formLimit: 10,        answerLimit: 1000     },
+  { name: 'business', formLimit: Infinity,  answerLimit: Infinity },
+];
+```
+
+プランの上限値を変更する場合はこのファイルのみを編集します。
+
+### 制限の適用タイミング（サーバーサイド強制）
+
+| 制限 | 適用API | 判定ロジック |
+|---|---|---|
+| フォーム作成数 | `POST /api/form/create` | ユーザーが保有するフォーム総数 ≥ プランの `formLimit` なら 403 |
+| 月次回答数 | `POST /api/answer/create` | 当月1日〜末日の回答数 ≥ プランの `answerLimit` なら 403 |
+
+制限はすべてサーバーサイドで強制されており、クライアントからの回避はできません。
+
+### プランのアップグレードフロー
+
+```
+/pricing → プラン選択
+  → 未ログインの場合: Google OAuth ログイン → リダイレクト
+  → /checkout?plan=pro (or business)
+    → Stripe 組み込みチェックアウト (Checkout Provider)
+      → 決済完了
+        → /checkout/completed/[plan]
+          → POST /api/user/update でDBのUser.planを更新
+            → /admin にリダイレクト
+```
+
+### DBのプランフィールド
+
+`User` モデルの `plan` カラム（`String?`）にプラン名を保存します。
+
+| 値 | 意味 |
+|---|---|
+| `null` / 未設定 | Free 扱い（`getPlanFormLimit` がデフォルトで Free を返す） |
+| `"free"` | Free プラン |
+| `"pro"` | Pro プラン |
+| `"business"` | Business プラン |
+
+---
+
 ## データベーススキーマ
 
 | モデル | 用途 |

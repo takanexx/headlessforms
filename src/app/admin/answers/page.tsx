@@ -140,7 +140,7 @@ export default function AnswersPage() {
                   mode="range"
                   selected={dateSearch}
                   onSelect={range =>
-                    setDateSearch(range ?? { from: undefined, to: undefined })
+                    setDateSearch(range ? { from: range.from, to: range.to } : { from: undefined, to: undefined })
                   }
                   numberOfMonths={2}
                   locale={ja}

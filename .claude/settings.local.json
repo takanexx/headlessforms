@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh issue:*)",
+      "Bash(npx prisma:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(claude mcp:*)",
+      "mcp__slack__slack_list_channels",
+      "mcp__slack__slack_post_message",
+      "Read(//Users/gaku-ishikawa/Develop/headlessforms-fix-5/**)",
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(npm install:*)",
+      "Bash(PATH=\"/Users/gaku-ishikawa/Develop/headlessforms/node_modules/.bin:$PATH\" next lint)",
+      "Bash(PATH=\"/Users/gaku-ishikawa/Develop/headlessforms/node_modules/.bin:$PATH\" tsc --noEmit)",
+      "Bash(node_modules/.bin/next lint:*)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(gh repo:*)",
+      "Skill(update-config)"
+    ]
+  }
+}

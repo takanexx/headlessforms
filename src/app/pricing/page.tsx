@@ -32,7 +32,7 @@ const plans = [
   },
   {
     name: 'pro',
-    title: 'Starter plan',
+    title: 'Pro plan',
     price: 19,
     priceUnit: 'month',
     description: 'For developers ready to launch real-world apps.',
@@ -49,7 +49,7 @@ const plans = [
   },
   {
     name: 'business',
-    title: 'Production plan',
+    title: 'Business plan',
     price: 99,
     priceUnit: 'month',
     description: 'For teams with growing user bases.',
@@ -77,13 +77,12 @@ export default function PricingPage() {
       {/* Header */}
       <div className="flex flex-col items-center mt-16 mb-10">
         <h1 className="text-5xl font-extrabold text-center mb-4 leading-tight">
-          Make incredible apps.
+          シンプルで強力なフォーム管理を、
           <br />
-          With pricing to match.
+          あなたのペースで。
         </h1>
         <p className="text-lg text-gray-600 text-center max-w-2xl">
-          Build, submit, and update your app, all with pricing that scales as
-          you grow. Great for any React Native app.
+          HeadlessFormsはAPIファーストのフォームバックエンドです。どんな規模のプロジェクトにも対応する料金プランをご用意しています。
         </p>
       </div>
       {/* Plans */}
