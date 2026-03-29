@@ -48,7 +48,7 @@ export default async function AccountPage() {
                     にのみ送信・保存されます
                   </p>
                 </div>
-                <CheckoutForm />
+                <CheckoutForm plan={user.plan ?? 'free'} />
               </Card>
             </TabsContent>
           </Tabs>

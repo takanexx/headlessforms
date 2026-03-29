@@ -3,9 +3,10 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import CheckoutForm from '../admin/account/checkout-form';
 
-export default function AccountPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const plan = searchParams.get('plan') ?? 'free';
 
@@ -39,5 +40,13 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense>
+      <CheckoutContent />
+    </Suspense>
   );
 }
